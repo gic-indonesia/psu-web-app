@@ -1,15 +1,14 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from 'next/font/google';
+import StoreProvider from "@src/lib/redux/StoreProvider";
+import ToastProvider from "@src/lib/react-toastify/ToastProvider";
+import Main from "@layouts/wrappers/main";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '700'], // Regular, Medium, Bold
+  variable: '--font-inter', // Custom CSS variable
 });
 
 export const metadata: Metadata = {
@@ -25,9 +24,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${inter.variable}`}
       >
-        {children}
+        <StoreProvider>
+          <ToastProvider>
+            <Main>
+              {children}
+            </Main>
+          </ToastProvider>
+        </StoreProvider>
       </body>
     </html>
   );
