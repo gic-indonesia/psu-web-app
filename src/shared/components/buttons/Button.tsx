@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/display-name */
 import { LucideIcon } from 'lucide-react';
 import * as React from 'react';
@@ -48,7 +49,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={disabled}
         className={cn(
           'inline-flex items-center rounded font-medium',
-          'focus-visible:ring-indigo-500 focus:outline-none focus-visible:ring',
+          'focus-visible:ring-[#f59e0b] focus:outline-none focus-visible:ring',
           'shadow-sm',
           'transition-colors duration-75',
           //#region  //*=========== Size ===========
@@ -60,22 +61,22 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           //#region  //*=========== Variants ===========
           [
             variant === 'primary' && [
-              'bg-indigo-600 text-white',
-              'hover:bg-indigo-500 hover:text-white',
-              'active:bg-indigo-700',
-              'disabled:bg-indigo-700',
+              'bg-[#d97706] text-white',
+              'hover:bg-[#f59e0b] hover:text-white',
+              'active:bg-[#b45309]',
+              'disabled:bg-[#b45309]',
             ],
             variant === 'outline' && [
-              'text-indigo-500',
-              'border-indigo-500 border',
-              'hover:bg-indigo-50 active:bg-indigo-100 disabled:bg-indigo-100',
+              'text-[#f59e0b]',
+              'border-[#f59e0b] border',
+              'hover:bg-indigo-50 active:bg-[#fef3c7] disabled:bg-[#fef3c7]',
               isDarkBg &&
                 'hover:bg-gray-900 active:bg-gray-800 disabled:bg-gray-800',
             ],
             variant === 'ghost' && [
-              'text-indigo-500',
+              'text-[#f59e0b]',
               'shadow-none',
-              'hover:bg-indigo-50 active:bg-indigo-100 disabled:bg-indigo-100',
+              'hover:bg-indigo-50 active:bg-[#fef3c7] disabled:bg-[#fef3c7]',
               isDarkBg &&
                 'hover:bg-gray-900 active:bg-gray-800 disabled:bg-gray-800',
             ],
@@ -106,7 +107,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
               {
                 'text-white': ['primary', 'dark'].includes(variant),
                 'text-black': ['light'].includes(variant),
-                'text-indigo-500': ['outline', 'ghost'].includes(variant),
+                'text-[#f59e0b]': ['outline', 'ghost'].includes(variant),
               }
             )}
           >

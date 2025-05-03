@@ -42,9 +42,9 @@ export default function Main(props: { children: ReactNode }) {
       {
         !isTokenExpired() && !(pathname === '/auth') ? (
           <Fragment>
-            <main className="flex">
+            <main className="flex amber bg-white">
               <SideNav/>
-              <div className="flex-1">
+              <div className="flex-1 bg-white">
                 <MarginWidthWrapper>
                   <Header/>
                   <HeaderMobile/>

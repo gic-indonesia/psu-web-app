@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { cn } from '@src/lib/utils';
 import get from 'lodash.get';
 import { RegisterOptions, useFormContext } from 'react-hook-form';
 import { HiExclamationCircle } from 'react-icons/hi';
@@ -31,7 +31,7 @@ export default function TextArea({
 
   return (
     <div>
-      <label htmlFor={id} className='block text-sm font-normal text-gray-700'>
+      <label htmlFor={id} className='block text-sm font-medium text-black'>
         {label}
       </label>
       <div className='relative mt-1'>
@@ -42,16 +42,17 @@ export default function TextArea({
           name={id}
           id={id}
           readOnly={readOnly}
-          className={clsx(
+          className={cn(
             readOnly
               ? 'cursor-not-allowed border-gray-300 bg-gray-100 focus:border-gray-300 focus:ring-0'
               : error
               ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-              : 'focus:border-primary-500 focus:ring-primary-500 border-gray-300',
+              : 'p-1 focus:ring-1 focus:outline-1 focus:outline-amber-500 focus:ring-amber-500',
             'block w-full rounded-md shadow-sm'
           )}
           placeholder={placeholder}
           aria-describedby={id}
+          onFocus={(e) => console.log('focus', e)}
         />
         {!hideError && error && (
           <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3'>

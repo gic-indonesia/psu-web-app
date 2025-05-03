@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/display-name */
 import { LucideIcon } from 'lucide-react';
 import * as React from 'react';
@@ -54,23 +55,23 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
           //#region  //*=========== Variants ===========
           [
             variant === 'primary' && [
-              'bg-primary-500 text-white',
-              'border-primary-600 border',
-              'hover:bg-primary-600 hover:text-white',
-              'active:bg-primary-700',
-              'disabled:bg-primary-700',
+              'bg-amber-500 text-white',
+              'border-amber-600 border',
+              'hover:bg-amber-600 hover:text-white',
+              'active:bg-amber-700',
+              'disabled:bg-amber-700',
             ],
             variant === 'outline' && [
-              'text-primary-500',
-              'border-primary-500 border',
-              'hover:bg-primary-50 active:bg-primary-100 disabled:bg-primary-100',
+              'text-amber-500',
+              'border-amber-500 border',
+              'hover:bg-amber-50 active:bg-amber-100 disabled:bg-amber-100',
               isDarkBg &&
                 'hover:bg-gray-900 active:bg-gray-800 disabled:bg-gray-800',
             ],
             variant === 'ghost' && [
-              'text-primary-500',
+              'text-amber-500',
               'shadow-none',
-              'hover:bg-primary-50 active:bg-primary-100 disabled:bg-primary-100',
+              'hover:bg-amber-50 active:bg-amber-100 disabled:bg-amber-100',
               isDarkBg &&
                 'hover:bg-gray-900 active:bg-gray-800 disabled:bg-gray-800',
             ],
@@ -101,7 +102,7 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
               {
                 'text-white': ['primary', 'dark'].includes(variant),
                 'text-black': ['light'].includes(variant),
-                'text-primary-500': ['outline', 'ghost'].includes(variant),
+                'text-amber-500': ['outline', 'ghost'].includes(variant),
               }
             )}
           >

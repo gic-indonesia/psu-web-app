@@ -105,16 +105,13 @@ const LoginForm = () => {
       <div className="sm:mx-auto sm:w-full sm:max-w-sm items-center justify-center">
         <div className="flex justify-center text-center items-center">
           <NextImage
-            alt="Your Company"
-            src="/next.svg"
-            className="mx-auto h-10 w-auto justify-center items-center"
-            width='180'
-            height='180'
+            alt="PT. Pakan Sehat Unggul"
+            src="/assets/psu-with-text.png"
+            className="h-[150px] w-auto items-center"
+            width='200'
+            height='200'
           />
         </div>
-        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-800">
-          Sign in to your account
-        </h2>
       </div>
 
       <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-sm">

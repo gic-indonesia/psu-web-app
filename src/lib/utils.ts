@@ -57,3 +57,10 @@ export const modulesToAbilities = (modules: Array<any>) => {
   }
   return abilities;
 }
+
+export const toCurrency = (value: number, currency: string = 'IDR', locale: string = 'id-ID') => {
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency,
+  }).format(value);
+}

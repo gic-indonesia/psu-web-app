@@ -1,19 +1,25 @@
 'use client'
+
 import axios from "axios";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 
 const baseInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
-  timeout: 10000,
   headers: { 'Content-Type': 'application/json' }
 })
 
 baseInstance.interceptors.request.use(
   async (config) => {
     const { data } = await axios.get('/api/get-token');
-    if (data && data.token) {
-      config.headers['Authorization'] = `Bearer ${data.token}`
+    if (data && data.intToken) {
+      config.headers['x-token'] = data.intToken
+    }
+    if (data && data.accurateToken) {
+      config.headers['Authorization'] = `bearer ${data.accurateToken}`
+    }
+    if (data && data.sessionId) {
+      config.headers['x-session-id'] = data.sessionId
     }
     return config;
   },

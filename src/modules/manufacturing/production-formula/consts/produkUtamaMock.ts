@@ -1,0 +1,15 @@
+export const barangOptions = [
+  { label: "Premix KERINCI-2", value: "990004" },
+  { label: "Premix KERINCI-3", value: "990003" },
+  { label: "Premix KERINCI-3.5", value: "990024" },
+  { label: "Premix KERINCI-4", value: "990002" },
+  { label: "Premix KERINCI-5", value: "990001" },
+  { label: "Premix LEUSER-2", value: "990011" },
+  { label: "Premix LEUSER-3", value: "990012" },
+  { label: "Premix LEUSER-3.5", value: "990023" },
+  { label: "Premix LEUSER-4", value: "990013" },
+  { label: "Premix MANINJAU-2", value: "990008" },
+  { label: "Premix MANINJAU-3", value: "990009" },
+  { label: "Premix MANINJAU-3.5", value: "990022" },
+  { label: "Premix MANINJAU-4", value: "990010" },
+]
