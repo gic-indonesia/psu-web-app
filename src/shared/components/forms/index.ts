@@ -1,4 +1,3 @@
-import DatePicker from "./DatePicker";
 import Input from "./Input";
 import PasswordInput from "./PasswordInput";
 import SelectInput from "./SelectInput";
@@ -9,7 +8,6 @@ import SearchableSelectInput from "./SearchableSelectInput";
 import CheckboxInput from "./CheckboxInput";
 
 export {
-  DatePicker,
   Input,
   PasswordInput,
   SelectInput,
