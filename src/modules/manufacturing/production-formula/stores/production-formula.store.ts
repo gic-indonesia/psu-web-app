@@ -5,6 +5,9 @@ import { FilterProductionFormulaListRequest } from "../requests/filter-productio
 import { ProductionFormulaService } from "../services";
 import { ProductionFormulaListModel } from "../models/production-formula-list.model";
 import { ItemDetail } from "../models/production-formula-detail.model";
+import { ProducedItem } from "../models/produced-item.model";
+import { Process } from '../models/process.model';
+import { StorageService } from "@src/shared/local-storage";
 
 export const fetchList = createAsyncThunk(
   'productionFormula/fetchList',
@@ -18,20 +21,49 @@ export const fetchItemDetail = createAsyncThunk(
   'productionFormula/fetchItemDetail',
   async (id: number): Promise<any> => {
     const { d } = await ProductionFormulaService().detail(id)
+    StorageService().set('productionFormulaItem', d);
     return d;
   }
 )
+
+export const fetchProducedItems = createAsyncThunk(
+  'productionFormula/fetchProducedItems',
+  async (): Promise<any> => {
+    const { d } = await ProductionFormulaService().getProducedItems()
+    return d;
+  }
+)
+
+export const fetchProcesses = createAsyncThunk(
+  'productionFormula/fetchProcesses',
+  async (): Promise<any> => {
+    const { d } = await ProductionFormulaService().getProcesses()
+    return d;
+  }
+)
+
+const initialProductionFormulaItem = () => {
+  const item = StorageService().get('productionFormulaItem');
+  if (item && typeof item === 'object') {
+    return new ItemDetail(item as any);
+  }
+  return undefined;
+}
 
 interface ProductionFormulaState {
   data: ProductionFormulaListModel | undefined;
   item: ItemDetail | undefined;
   filter: FilterProductionFormulaListRequest;
+  producedItems: ProducedItem[] | undefined;
+  processes: Process[] | undefined;
 }
 
 const initialState: ProductionFormulaState = {
   data: undefined,
-  item: undefined,
+  item: initialProductionFormulaItem(),
   filter: FilterProductionFormulaListRequest.createFromJson({}),
+  producedItems: undefined,
+  processes: undefined,
 };
 
 export const productionFormulaSlice = createSlice({
@@ -42,6 +74,9 @@ export const productionFormulaSlice = createSlice({
       state.filter = new FilterProductionFormulaListRequest(action.payload);
     },
     handleItemDetail: (state, action) => {
+      if (!action.payload) {
+        StorageService().destroy('productionFormulaItem');
+      }
       state.item = action.payload;
     }
   },
@@ -57,6 +92,18 @@ export const productionFormulaSlice = createSlice({
     });
     builder.addCase(fetchItemDetail.rejected, (state, action) => {
       console.error('Error fetching production formula item list', action.error);
+    });
+    builder.addCase(fetchProducedItems.fulfilled, (state, action) => {
+      state.producedItems = action.payload.map((item: any) => new ProducedItem(item));
+    });
+    builder.addCase(fetchProducedItems.rejected, (state, action) => {
+      console.error('Error fetching produced items', action.error);
+    });
+    builder.addCase(fetchProcesses.fulfilled, (state, action) => {
+      state.processes = action.payload.map((item: any) => new Process(item));
+    });
+    builder.addCase(fetchProcesses.rejected, (state, action) => {
+      console.error('Error fetching processes', action.error);
     });
   }
 })

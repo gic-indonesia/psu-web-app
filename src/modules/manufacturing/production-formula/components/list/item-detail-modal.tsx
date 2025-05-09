@@ -1,6 +1,5 @@
 'use client'
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Modal } from "@src/shared/components/modals";
 import { Badge } from "@src/components/ui/badge";
 import { Label, MarqueeText } from "@src/shared/components/topography";

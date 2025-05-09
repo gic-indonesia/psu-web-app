@@ -22,7 +22,6 @@ export default function Main(props: { children: ReactNode }) {
   const blockAccess = !isUserLoggedIn() && !(pathname === '/auth')
 
   useEffect(() => {
-    console.log('blockAccess: ', blockAccess)
     if (blockAccess) {
       router.push(`/auth?to=/`)
     }
@@ -33,7 +32,6 @@ export default function Main(props: { children: ReactNode }) {
   }
 
   if (isTokenExpired() && !(pathname === '/auth')) {
-    console.log('here2')
     dispatch(handleLogout());
     return null;
   }

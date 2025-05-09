@@ -1,7 +1,7 @@
 "use client"
 
 import { useFormContext } from "react-hook-form"
-
+import { cn } from "@src/lib/utils"
 import {
   FormControl,
   FormField,
@@ -22,8 +22,8 @@ interface IOption {
   label: string;
 }
 
-export default function SelectForm(props: { label: string, placeholder: string, id: string, options: IOption[], defaultValue?: string }) {
-  const { label, placeholder, id, options, defaultValue } = props;
+export default function SelectForm(props: { label?: string, placeholder: string, id: string, options: IOption[], defaultValue?: string, className?: string }) {
+  const { label, placeholder, id, options, defaultValue, className } = props;
   const form = useFormContext()
 
   return (
@@ -33,9 +33,9 @@ export default function SelectForm(props: { label: string, placeholder: string, 
       name={id}
       render={({ field }) => (
         <FormItem
-          className="w-full"
+          className={cn('w-full', className)}
         >
-          <FormLabel className="text-black">{label}</FormLabel>
+          <FormLabel className="text-black">{label ?? ''}</FormLabel>
           <Select onValueChange={field.onChange} defaultValue={field.value}>
             <FormControl>
               <SelectTrigger
@@ -52,7 +52,9 @@ export default function SelectForm(props: { label: string, placeholder: string, 
               }
             </SelectContent>
           </Select>
-          <FormMessage />
+          <FormMessage
+            className="text-[10pt]"
+          />
         </FormItem>
       )}
     />

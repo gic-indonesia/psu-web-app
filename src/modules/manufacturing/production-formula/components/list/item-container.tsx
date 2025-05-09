@@ -1,6 +1,5 @@
 'use client'
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useRef } from "react";
 import { Separator } from "@src/components/ui/separator";
 import { IDataModel } from "../../models/production-formula-list.model";

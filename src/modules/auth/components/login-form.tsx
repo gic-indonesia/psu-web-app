@@ -41,6 +41,8 @@ const LoginForm = () => {
       progress: undefined,
       theme: "light",
       transition: Bounce,
+      className: 'rounded-md',
+      style: { width: '300px' }
       });
   }
 
@@ -50,7 +52,6 @@ const LoginForm = () => {
     AuthService()
       .login(params)
       .then((response) => {
-        console.log("Login response: ", response);
         const { data, status } = response;
         if (status === 200) {
           const modules = data.access.modules ? data.access.modules : [];

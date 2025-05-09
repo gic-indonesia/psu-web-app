@@ -31,8 +31,8 @@ interface IOption {
   label: string;
 }
 
-export default function SearchableSelectInput(props: { label: string, options: IOption[], id: string, placeholder: string, onChange?: (option: IOption) => void, ifEmptyLabel?: string }) {
-  const { options, label, id, placeholder, onChange, ifEmptyLabel } = props;
+export default function SearchableSelectInput(props: { label: string, options: IOption[] & unknown, id: string, placeholder: string, onChange?: (option: IOption & unknown) => void, ifEmptyLabel?: string, className?: string }) {
+  const { options, label, id, placeholder, onChange, ifEmptyLabel, className } = props;
   const { setValue, control } = useFormContext();
 
   return (
@@ -50,14 +50,17 @@ export default function SearchableSelectInput(props: { label: string, options: I
                   role="combobox"
                   className={cn(
                     "justify-between",
+                    className,
                     !field.value && "text-muted-foreground"
                   )}
                 >
-                  {field.value
-                    ? options.find(
-                        (option) => option.value === field.value
-                      )?.label
-                    : placeholder}
+                  <span className="truncate">
+                    {field.value
+                      ? options.find(
+                          (option) => option.value === field.value
+                        )?.label
+                      : placeholder}
+                  </span>
                   <ChevronsUpDown className="opacity-50" />
                 </Button>
               </FormControl>

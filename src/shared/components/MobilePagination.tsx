@@ -161,7 +161,6 @@ export default function MobilePagination(props: {
   };
 
   const RightSide = () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let element: any = [];
     if (isOnLeft() || isOnMiddle()) {
       element = [

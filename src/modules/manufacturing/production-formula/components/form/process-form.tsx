@@ -1,36 +1,39 @@
-import { Input, NoLabelInput, SelectInput } from "@src/shared/components/forms";
+'use client'
+
 import { SearchableSelectInput } from "@src/shared/components/forms";
-import { barangOptions } from "../../consts/produkUtamaMock";
-import tahapanMock from "../../consts/tahapanMock";
-import { Button, IconButton } from "@src/shared/components/buttons";
+import { IconButton } from "@src/shared/components/buttons";
 import { SetStateAction, useEffect, useState } from "react";
-import { Switch } from "@src/components/ui/switch";
 import { Separator } from "@src/components/ui/separator";
-import StageModal from "./stage-modal";
-import { FieldArrayWithId, useFieldArray, useFormContext } from "react-hook-form";
+import StageModal from "./process-modal";
+import { useFormContext } from "react-hook-form";
 import { CreateProductionFormulaRequest, IDetailProcess } from "../../requests/create-production-formula.request";
 import { ScrollArea, ScrollBar } from "@src/components/ui/scroll-area";
 import { Card, CardContent } from "@src/components/ui/card";
 import { Edit } from "lucide-react";
+import { useAppSelector } from "@src/hooks/redux";
 
-const ProductAndStagesForm = (props: { onNextStep: () => void }) => {
-  const { onNextStep } = props;
-  const [isAutoNumbering, setIsAutoNumbering] = useState(true);
+const ProductAndStagesForm = () => {
+  const { processes } = useAppSelector((state) => state.productionFormulaStore);
   const [showStage, setShowStage] = useState<{ label: string; value: string } | undefined>(undefined);
+  const [detailProcess, setDetailProcess] = useState<IDetailProcess[]>([]);
   const [processSortList, setProcessSortList] = useState<Record<number, IDetailProcess[]> | undefined>(undefined);
 
+  const { getValues, setValue } = useFormContext<CreateProductionFormulaRequest>();
+
   const handleChangeStage = (option: SetStateAction<{ label: string; value: string; } | undefined>) => {
+    const itemNo = getValues('itemNo');
+    const quantity = getValues('quantity');
+    if (!itemNo || isNaN(quantity)) {
+      alert('Silahkan isi produk utama dan kuantitas terlebih dahulu');
+      return;
+    }
     setShowStage(option);
   }
 
-  const { control } = useFormContext<CreateProductionFormulaRequest>();
-  const { fields, append } = useFieldArray({
-    control,
-    name: 'detailProcess',
-  });
-
   useEffect(() => {
-    function groupBySortNumber(items: FieldArrayWithId<CreateProductionFormulaRequest, "detailProcess", "id">[]): Record<number, IDetailProcess[]> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setValue('detailProcess', detailProcess as any);
+    function groupBySortNumber(items: IDetailProcess[]): Record<number, IDetailProcess[]> {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return items.reduce((acc: any, item: IDetailProcess) => {
         if (!acc[item.sortNumber]) {
@@ -40,72 +43,38 @@ const ProductAndStagesForm = (props: { onNextStep: () => void }) => {
         return acc;
       }, {} as Record<number, IDetailProcess[]>);
     }
-    setProcessSortList(groupBySortNumber(fields));
-  }, [fields])
+    setProcessSortList(groupBySortNumber(detailProcess));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [detailProcess])
 
   const handleSubmitProcessDetail = (data: IDetailProcess) => {
-    append(data);
+    const x = detailProcess.map((c) => c);
+    x.push({...data, sortNumber: String(data.sortNumber)});
+    setDetailProcess(x);
     setShowStage(undefined);
   }
 
+  const handleEditProcess = (item: IDetailProcess) => {
+    console.log('item', item);
+  }
+
   return (
-    <div className="p-2 mt-1 w-full space-y-3">
-      <SearchableSelectInput
-        label="Produk Utama"
-        id="itemNo"
-        options={barangOptions}
-        placeholder="Pilih Produk Utama"
-        ifEmptyLabel="Tidak ada produk yang ditemukan"
-      />
-      <div className="flex items-end space-x-2">
-        <Input
-          id="quantity"
-          label="Kuantitas"
-          type="number"
-          labelClassName="font-medium"
-        />
-        <NoLabelInput
-          id="itemUnitName"
-        />
-      </div>
-      <div className="flex space-x-8 items-center">
+    <div className="p-2 w-full mt-1 space-y-3">
+      <div>
         {
-          !isAutoNumbering ? (
-            <Input
-              id="number"
-              label="No Formula #"
-              type="string"
-              labelClassName="mt-0 font-medium"
-            />
-          ) : (
-            <SelectInput
-              defaultValue={'1'}
-              label={"No Formula #"}
-              id="formulaProduction"
-              options={[{ value: '1', label: 'Formula Produksi' }]}
-              placeholder="Pilih Formula Produksi"
+          processes && (
+            <SearchableSelectInput
+              label="Tahapan"
+              id="stages"
+              options={processes.map((c) => ({ label: c.nama_tahapan, value: String(c.id) }))}
+              placeholder="Pilih Tahapan Produksi"
+              ifEmptyLabel="Tidak ada tahapan yang ditemukan"
+              onChange={(option) => handleChangeStage(option)}
+              className="w-[340px] truncate overflow-hidden text-ellipsis whitespace-nowrap"
             />
           )
         }
-        <Switch
-          defaultChecked={isAutoNumbering}
-          className="mt-4"
-          onCheckedChange={(checked) => {
-            setIsAutoNumbering(checked)
-          }}
-        />
-      </div>
-      <Separator className="my-3" />
-      <div>
-        <SearchableSelectInput
-          label="Tahapan"
-          id="stages"
-          options={tahapanMock}
-          placeholder="Pilih Tahapan Produksi"
-          ifEmptyLabel="Tidak ada tahapan yang ditemukan"
-          onChange={(option) => handleChangeStage(option)}
-        />
-        <ScrollArea className="px-2 h-[500px] w-[350px] mt-3">
+        <ScrollArea className="px-2 h-[350px] w-[340px] mt-3">
           <div className="mt-2 text-[9pt] space-y-1">
             {
               processSortList && Object.keys(processSortList).map((key, i) => (
@@ -126,6 +95,7 @@ const ProductAndStagesForm = (props: { onNextStep: () => void }) => {
                                 <IconButton
                                   variant="outline"
                                   icon={Edit}
+                                  onClick={() => handleEditProcess(item)}
                                 />
                               </div>
                             </CardContent>
@@ -141,15 +111,6 @@ const ProductAndStagesForm = (props: { onNextStep: () => void }) => {
           </div>
         </ScrollArea>
       </div>
-      <Button
-        variant="primary"
-        type="button"
-        className="flex w-full justify-center rounded-md"
-        size="base"
-        onClick={onNextStep}
-      >
-        Next
-      </Button>
       {
         showStage && (
           <StageModal

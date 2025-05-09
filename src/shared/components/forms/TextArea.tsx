@@ -47,12 +47,11 @@ export default function TextArea({
               ? 'cursor-not-allowed border-gray-300 bg-gray-100 focus:border-gray-300 focus:ring-0'
               : error
               ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-              : 'p-1 focus:ring-1 focus:outline-1 focus:outline-amber-500 focus:ring-amber-500',
+              : 'p-1 border-1 border-gray-300 focus:ring-1 focus:outline-1 focus:outline-amber-500 focus:ring-amber-500 focus:border-amber-500',
             'block w-full rounded-md shadow-sm'
           )}
           placeholder={placeholder}
           aria-describedby={id}
-          onFocus={(e) => console.log('focus', e)}
         />
         {!hideError && error && (
           <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3'>

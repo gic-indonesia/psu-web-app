@@ -1,8 +1,9 @@
 import * as z from 'zod';
+import { format } from 'date-fns'
 
 export interface IDetailProcess {
   processCategoryName: string;
-  sortNumber: number;
+  sortNumber: string;
   _status?: 'delete';
   id?: number;
   instruction?: string;
@@ -19,7 +20,7 @@ export class DetailProcess {
 
   constructor(data: IDetailProcess) {
     this.processCategoryName = data.processCategoryName;
-    this.sortNumber = data.sortNumber;
+    this.sortNumber = Number(data.sortNumber);
     this._status = data._status;
     this.id = data.id;
     this.instruction = data.instruction;
@@ -28,9 +29,9 @@ export class DetailProcess {
 }
 
 export interface IDetailMaterial {
-  itemNo: string;
-  quantity: number;
-  _status?: 'delete';
+  itemNo: string; //KODE BARANG
+  quantity: string; //KUANTITAS
+  _status?: string;
   dataClassification1Name?: string;
   dataClassification2Name?: string;
   dataClassification3Name?: string;
@@ -43,16 +44,19 @@ export interface IDetailMaterial {
   dataClassification10Name?: string;
   departmentName?: string;
   detailName?: string;
-  detailNotes?: string;
+  detailNotes?: string; //KETERANGAN
   id?: number;
-  itemUnitName?: string;
+  itemUnitName: string; //NAMA SATUAN
+  itemUnitId: number;
   projectNo?: string;
+  standardCost: string;
+  totalStandardCost: string;
 }
 
 export class DetailMaterial {
   itemNo: string;
   quantity: number;
-  _status?: 'delete';
+  _status?: string;
   dataClassification1Name?: string;
   dataClassification2Name?: string;
   dataClassification3Name?: string;
@@ -67,12 +71,15 @@ export class DetailMaterial {
   detailName?: string;
   detailNotes?: string;
   id?: number;
-  itemUnitName?: string;
+  itemUnitName: string;
+  itemUnitId: number;
   projectNo?: string;
+  standardCost: number;
+  totalStandardCost: number;
 
   constructor(data: IDetailMaterial) {
     this.itemNo = data.itemNo;
-    this.quantity = data.quantity;
+    this.quantity = Number(data.quantity);
     this._status = data._status;
     this.dataClassification1Name = data.dataClassification1Name;
     this.dataClassification2Name = data.dataClassification2Name;
@@ -89,20 +96,24 @@ export class DetailMaterial {
     this.detailName = data.detailName;
     this.id = data.id;
     this.itemUnitName = data.itemUnitName;
+    this.itemUnitId = data.itemUnitId;
     this.projectNo = data.projectNo;
+    this.standardCost = Number(data.standardCost.replace(/\./g, "").replace(/,/g, "."));
+    this.totalStandardCost = Number(data.totalStandardCost.replace(/\./g, "").replace(/,/g, "."));
   }
 }
 
 export interface ICreateProductionFormulaRequest {
   itemNo: string;
-  quantity: number;
-  branchId?: number;
-  branchName?: string;
+  quantity: string;
+  transDate: string;
+  branchId: number;
+  branchName: string;
+  typeAutoNumber?: number;
   description?: string;
   itemUnitName?: string;
   number?: string;
-  secondQualityProductNo: string[];
-  typeAutoNumber?: number;
+  secondQualityProductNo?: string[];
   detailProcess?: IDetailProcess[];
   detailMaterial?: IDetailMaterial[];
 }
@@ -110,26 +121,28 @@ export interface ICreateProductionFormulaRequest {
 export class CreateProductionFormulaRequest {
   itemNo: string;
   quantity: number;
-  branchId?: number;
-  branchName?: string;
+  transDate: string;
+  branchId: number;
+  branchName: string;
+  typeAutoNumber?: number;
   description?: string;
   itemUnitName?: string;
   number?: string;
-  secondQualityProductNo: string[];
-  typeAutoNumber?: number;
+  secondQualityProductNo?: string[];
   detailProcess?: DetailProcess[];
   detailMaterial?: DetailMaterial[];
 
   constructor(data: ICreateProductionFormulaRequest) {
     this.itemNo = data.itemNo;
-    this.quantity = data.quantity;
-    this.branchId = data.branchId;
-    this.branchName = data.branchName;
+    this.quantity = Number(data.quantity);
+    this.transDate = format(new Date(data.transDate), 'dd/MM/yyyy');
+    this.branchId = data.branchId ?? 155;
+    this.branchName = data.branchName ?? 'PREMIX';
+    this.typeAutoNumber = data.typeAutoNumber ?? 301;
     this.description = data.description;
     this.itemUnitName = data.itemUnitName;
     this.number = data.number;
     this.secondQualityProductNo = data.secondQualityProductNo;
-    this.typeAutoNumber = data.typeAutoNumber ?? 0;
     this.detailProcess = data.detailProcess?.map((item) => new DetailProcess(item)) ?? [];
     this.detailMaterial = data.detailMaterial?.map((item) => new DetailMaterial(item)) ?? [];
   }
@@ -137,7 +150,31 @@ export class CreateProductionFormulaRequest {
   static schema() {
     return z.object({
       itemNo: z.string().min(1, 'Produk utama harus diisi'),
-      quantity: z.number().min(1, 'Kuantitas harus diisi'),
+      quantity: z.string().min(1, 'Kuantitas harus diisi'),
+      transDate: z.string().min(1, 'Tanggal harus diisi'),
+      itemUnitName: z.string({ message: 'Satuan harus diisi' }).min(1, 'Satuan harus diisi'),
+      branchId: z.string().optional(),
+      branchName: z.string().optional(),
+      number: z.string().optional(),
+      detailMaterial: z.array(z.object({
+        detailName: z.string(),
+        detailNotes: z.string().optional(),
+        itemNo: z.string(),
+        itemUnitName: z.string(),
+        quantity: z.string(),
+        _status: z.string().optional(),
+        id: z.number().optional(),
+        standardCost: z.string(),
+        totalStandardCost: z.string(),
+      })).optional(),
+      detailProcess: z.array(z.object({
+        instruction: z.string().optional(),
+        processCategoryName: z.string(),
+        sortNumber: z.string(),
+        subCon: z.boolean().optional(),
+        _status: z.string().optional(),
+        id: z.number().optional(),
+      })).optional(),
     });
   }
 

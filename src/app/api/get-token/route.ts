@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   const cookiesStore = await cookies();
-  console.log('cookiesStore', cookiesStore);
   const intToken = cookiesStore.get("accessToken");
   const accurateToken = cookiesStore.get("accurateToken");
   const sessionId = cookiesStore.get("sessionId");

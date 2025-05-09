@@ -8,9 +8,6 @@ const MarqueeText = (props: { text: string, containerRef: React.RefObject<HTMLDi
   useEffect(() => {
     const checkOverflow = () => {
       if (containerRef.current && textRef.current) {
-        // console.log('containerwidth', containerRef.current.clientWidth);
-        // console.log('textwidth', textRef.current.clientWidth);
-        // console.log('isoverflow', textRef.current.scrollWidth > containerRef.current.clientWidth);
         const isOverflow = textRef.current.scrollWidth > containerRef.current.clientWidth;
         setIsOverflowing(isOverflow);
       }

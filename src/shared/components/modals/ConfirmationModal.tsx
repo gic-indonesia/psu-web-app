@@ -4,8 +4,8 @@ const ConfirmationModal = (props: {
   title: string;
   message: string;
   confirmLabel: string;
-  onCancel: any;
-  onConfirmClick: any;
+  onCancel: () => void;
+  onConfirmClick: () => void;
   open: boolean;
 }) => {
   const { title = 'Konfirmasi', message = 'Konfirmasi ?', confirmLabel = 'Confirm', onConfirmClick, onCancel, open } = props;

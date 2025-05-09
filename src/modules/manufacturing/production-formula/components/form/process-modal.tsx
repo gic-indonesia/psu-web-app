@@ -1,4 +1,6 @@
-import { Input, SelectInput } from "@src/shared/components/forms";
+'use client'
+
+import { Input, NoLabelInput, SelectInput } from "@src/shared/components/forms";
 import { Modal } from "@src/shared/components/modals";
 import stages from "../../consts/stages";
 import { CheckboxInput } from "@src/shared/components/forms";
@@ -11,7 +13,6 @@ import { useEffect } from "react";
 const StageModal = (props: { isOpen: boolean, onSubmit: (data: IDetailProcess) => void, onClose: () => void, option: { label: string, value: string } }) => {
   const { isOpen, onClose, option, onSubmit } = props;
 
-
   const { getValues, setValue } = useFormContext();
 
   useEffect(() => {
@@ -20,12 +21,14 @@ const StageModal = (props: { isOpen: boolean, onSubmit: (data: IDetailProcess) =
       setValue('stageSort', '1');
       setValue('subCon', false);
       setValue('instruction', '');
+      setValue('stageId', option.value);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [option])
 
   const handleSubmit = () => {
-    const [ sortNumber, processCategoryName, subCon, instruction ] = getValues(['stageSort', 'stageName', 'subCon', 'instruction']);
-    onSubmit({ sortNumber, processCategoryName, subCon, instruction });
+    const [ id, sortNumber, processCategoryName, subCon, instruction ] = getValues(['stageId', 'stageSort', 'stageName', 'subCon', 'instruction']);
+    onSubmit({ sortNumber, processCategoryName, subCon, instruction, id });
   }
 
   return (
@@ -41,6 +44,10 @@ const StageModal = (props: { isOpen: boolean, onSubmit: (data: IDetailProcess) =
           defaultValue="1"
           options={stages}
           placeholder="Pilih Tahapan"
+        />
+        <NoLabelInput
+          id="stageId"
+          type="hidden"
         />
         <Input
           readOnly

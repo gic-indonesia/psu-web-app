@@ -1,6 +1,6 @@
 'use client'
 
-import { Fragment, useEffect } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Title } from "@src/shared/components/topography";
 import { SearchInput } from "@src/shared/components/forms";
 import { Button, IconButton } from "@src/shared/components/buttons";
@@ -33,6 +33,7 @@ const ProductionFormulaList = () => {
   const dispatch = useAppDispatch();
   const { data, filter, item } = useAppSelector((state) => state.productionFormulaStore);
   const router = useRouter();
+  const [action, setAction] = useState<'detail' | 'edit' | undefined>(undefined);
 
   const methods = useForm<ISearch>({
     mode: 'onSubmit',
@@ -50,16 +51,18 @@ const ProductionFormulaList = () => {
   }
 
   const handleShowDetail = (item: IDataModel) => {
+    setAction('detail');
     dispatch(fetchItemDetail(item.id));
+  }
+
+  const handleShowEdit = (item: IDataModel) => {
+    setAction('edit');
+    router.push(`/manufacturing/production-formula/form?action=edit&id=${item.id}`);
   }
 
   useEffect(() => {
     dispatch(fetchList(filter));
   }, [dispatch, filter])
-
-  useEffect(() => {
-    console.log('data', data);
-  }, [data])
 
   return (
     <Fragment>
@@ -104,11 +107,11 @@ const ProductionFormulaList = () => {
             </Tooltip>
           </TooltipProvider>
         </div>
-        <ScrollArea className="px-2 h-[500px] w-[395px] mt-3">
+        <ScrollArea className="px-2 h-[500px] w-[370px] mt-3">
           <div className="mt-2 text-[9pt] space-y-1">
             {
               data && data.d && data.d.map((item, index) => (
-                <Card key={index} className="w-[375px]" onClick={() => handleShowDetail(item)}>
+                <Card key={index} className="w-[355px]" onClick={() => handleShowDetail(item)}>
                   <CardContent className="flex space-x-2 h-14">
                     <ItemContainer
                       item={item}
@@ -118,6 +121,10 @@ const ProductionFormulaList = () => {
                       <IconButton
                         variant="outline"
                         icon={Edit}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleShowEdit(item);
+                        }}
                       />
                     </div>
                   </CardContent>
@@ -144,7 +151,7 @@ const ProductionFormulaList = () => {
         }
       </div>
       {
-        item && (
+        item && action && action === 'detail' && (
           <ItemDetailModal
             data={item}
             isOpen={!!item}
