@@ -113,6 +113,7 @@ const ProductionFormulaForm = (props: { item?: IItemDetail }) => {
         className: 'rounded-md',
         style: { width: '300px' }
         });
+      setProcessing(false);
     } else {
       toast.success(message, {
         position: "top-right",
@@ -127,6 +128,9 @@ const ProductionFormulaForm = (props: { item?: IItemDetail }) => {
         className: 'rounded-md',
         style: { width: '300px' }
         });
+      dispatch(fetchList(filter));
+      setProcessing(false);
+      router.push('/manufacturing/production-formula');
     }
   }
 
@@ -146,9 +150,6 @@ const ProductionFormulaForm = (props: { item?: IItemDetail }) => {
         .then((res) => {
           const { d, s } = res;
           showOnSuccessToast(Array.isArray(d) && d[0] ? d[0] : '', s);
-          dispatch(fetchList(filter));
-          setProcessing(false);
-          router.push('/manufacturing/production-formula');
         })
         .catch((e) => {
           setProcessing(false);

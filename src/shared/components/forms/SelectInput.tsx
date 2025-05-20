@@ -33,18 +33,18 @@ export default function SelectForm(props: { label?: string, placeholder: string,
       name={id}
       render={({ field }) => (
         <FormItem
-          className={cn('w-full', className)}
+          className={cn('w-full max-w-full overflow-hidden', className)}
         >
-          <FormLabel className="text-black">{label ?? ''}</FormLabel>
+          <FormLabel className="text-black max-w-full">{label ?? ''}</FormLabel>
           <Select onValueChange={field.onChange} defaultValue={field.value}>
-            <FormControl>
+            <FormControl className="max-w-full">
               <SelectTrigger
-                className="bg-white w-full"
+                className="bg-white w-full max-w-full text-black"
               >
                 <SelectValue placeholder={placeholder}/>
               </SelectTrigger>
             </FormControl>
-            <SelectContent>
+            <SelectContent className="w-full max-w-full">
               {
                 options.map((option, key) => (
                   <SelectItem key={key} value={option.value}>{option.label}</SelectItem>
@@ -53,7 +53,7 @@ export default function SelectForm(props: { label?: string, placeholder: string,
             </SelectContent>
           </Select>
           <FormMessage
-            className="text-[10pt]"
+            className="text-[10pt] max-w-full"
           />
         </FormItem>
       )}

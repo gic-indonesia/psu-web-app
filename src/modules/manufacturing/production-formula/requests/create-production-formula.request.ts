@@ -98,8 +98,8 @@ export class DetailMaterial {
     this.itemUnitName = data.itemUnitName;
     this.itemUnitId = data.itemUnitId;
     this.projectNo = data.projectNo;
-    this.standardCost = Number(data.standardCost.replace(/\./g, "").replace(/,/g, "."));
-    this.totalStandardCost = Number(data.totalStandardCost.replace(/\./g, "").replace(/,/g, "."));
+    this.standardCost = Number(data.standardCost);
+    this.totalStandardCost = Number(data.totalStandardCost);
   }
 }
 

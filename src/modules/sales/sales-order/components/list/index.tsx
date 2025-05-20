@@ -18,10 +18,10 @@ import { ScrollArea } from "@src/components/ui/scroll-area";
 import { Separator } from "@src/components/ui/separator";
 import ItemContainer from "./item-container";
 import ItemDetailModal from "./item-detail-modal";
-import { IProductionFormulaListModel } from "../../models/production-formula-list.model";
-import { fetchItemDetail, fetchList, handleFilter, handleItemDetail } from "../../stores/production-formula.store";
+import { ISalesOrderListModel } from "../../models/sales-order-list.model";
+import { fetchSalesOrderDetail, fetchSalesOrderList, handleFilter, handleItemDetail } from "../../stores/sales-order.store";
 import { useAppDispatch, useAppSelector } from "@src/hooks/redux";
-import { FilterProductionFormulaListRequest } from "../../requests/filter-production-formula-list.request";
+import { FilterSalesOrderListRequest } from "../../requests/filter-sales-order.request";
 import MobilePagination from "@src/shared/components/MobilePagination";
 import { useRouter } from "next/navigation";
 
@@ -29,9 +29,9 @@ interface ISearch {
   search: string;
 }
 
-const ProductionFormulaList = () => {
+const SalesOrderList = () => {
   const dispatch = useAppDispatch();
-  const { data, filter, item } = useAppSelector((state) => state.productionFormulaStore);
+  const { data, filter, item } = useAppSelector((state) => state.salesOrderStore);
   const router = useRouter();
   const [action, setAction] = useState<'detail' | 'edit' | undefined>(undefined);
 
@@ -43,31 +43,31 @@ const ProductionFormulaList = () => {
 
   const onSubmit: SubmitHandler<ISearch> = (data) => {
     if (data.search === '') {
-      dispatch(fetchList(FilterProductionFormulaListRequest.createFromJson({})));
+      dispatch(fetchSalesOrderList(FilterSalesOrderListRequest.createFromJson({})));
     } else {
-      const params = FilterProductionFormulaListRequest.createFromJson({ ...filter, filter: { keywords: { op: 'CONTAIN', val: data.search } } });
+      const params = FilterSalesOrderListRequest.createFromJson({ ...filter, filter: { keywords: { op: 'CONTAIN', val: data.search } } });
       dispatch(handleFilter(params));
     }
   }
 
-  const handleShowDetail = (item: IProductionFormulaListModel) => {
+  const handleShowDetail = (item: ISalesOrderListModel) => {
     setAction('detail');
-    dispatch(fetchItemDetail(item.id));
+    dispatch(fetchSalesOrderDetail(item.id));
   }
 
-  const handleShowEdit = (item: IProductionFormulaListModel) => {
+  const handleShowEdit = (item: ISalesOrderListModel) => {
     setAction('edit');
-    router.push(`/manufacturing/production-formula/form?action=edit&id=${item.id}`);
+    router.push(`/sales/sales-order/form?action=edit&id=${item.id}`);
   }
 
   useEffect(() => {
-    dispatch(fetchList(filter));
+    dispatch(fetchSalesOrderList(filter));
   }, [dispatch, filter])
 
   return (
     <Fragment>
        <div className="flex flex-col">
-        <Title>Formula Produksi</Title>
+        <Title>Pesanan Penjualan</Title>
         <div className="flex items-center px-2 py-2">
           <div>
             <FormProvider {...methods}>
@@ -96,7 +96,7 @@ const ProductionFormulaList = () => {
                   leftIcon={Plus}
                   variant="primary"
                   className="rounded-md"
-                  onClick={() => router.push('/manufacturing/production-formula/form')}
+                  onClick={() => router.push('/sales/sales-order/form')}
                 >
                   Tambah Data
                 </Button>
@@ -141,7 +141,7 @@ const ProductionFormulaList = () => {
               itemsPerPage={data.sp.pageSize}
               totalItems={data.sp.rowCount}
               onChangePage={(page) => {
-                dispatch(fetchList(FilterProductionFormulaListRequest.createFromJson({
+                dispatch(fetchSalesOrderList(FilterSalesOrderListRequest.createFromJson({
                   ...filter,
                   sp: { ...filter.sp, page, }
                 })))
@@ -163,4 +163,4 @@ const ProductionFormulaList = () => {
   );
 }
 
-export default ProductionFormulaList;
+export default SalesOrderList;

@@ -4,6 +4,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { FilterProductionFormulaListRequest } from "../requests/filter-production-formula-list.request";
 import { ProductionFormulaService } from "../services";
 import { ProductionFormulaListModel } from "../models/production-formula-list.model";
+import { ResponseModel } from "@src/shared/models";
 import { ItemDetail } from "../models/production-formula-detail.model";
 import { ProducedItem } from "../models/produced-item.model";
 import { Process } from '../models/process.model';
@@ -11,7 +12,7 @@ import { StorageService } from "@src/shared/local-storage";
 
 export const fetchList = createAsyncThunk(
   'productionFormula/fetchList',
-  async (option: FilterProductionFormulaListRequest): Promise<ProductionFormulaListModel> => {
+  async (option: FilterProductionFormulaListRequest): Promise<ResponseModel<ProductionFormulaListModel[]>> => {
     const data = await ProductionFormulaService().show(option)
     return data;
   }
@@ -51,7 +52,7 @@ const initialProductionFormulaItem = () => {
 }
 
 interface ProductionFormulaState {
-  data: ProductionFormulaListModel | undefined;
+  data: ResponseModel<ProductionFormulaListModel[]> | undefined;
   item: ItemDetail | undefined;
   filter: FilterProductionFormulaListRequest;
   producedItems: ProducedItem[] | undefined;
@@ -82,7 +83,7 @@ export const productionFormulaSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchList.fulfilled, (state, action) => {
-      state.data = new ProductionFormulaListModel(action.payload);
+      state.data = new ResponseModel<ProductionFormulaListModel[]>(action.payload);
     });
     builder.addCase(fetchList.rejected, (state, action) => {
       console.error('Error fetching production formula list:', action.error);

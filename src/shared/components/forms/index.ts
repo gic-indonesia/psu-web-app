@@ -6,6 +6,7 @@ import NoLabelInput from "./NoLabelInput";
 import SearchInput from "./SearchInput";
 import SearchableSelectInput from "./SearchableSelectInput";
 import CheckboxInput from "./CheckboxInput";
+import DatePicker from "./DatePicker";
 
 export {
   Input,
@@ -16,4 +17,5 @@ export {
   SearchInput,
   SearchableSelectInput,
   CheckboxInput,
+  DatePicker,
 }

@@ -12,6 +12,8 @@ import { IItemDetail, ItemDetail } from "../../models/item-detail.model";
 import MaterialModal from "./material-modal";
 import { useFormContext } from "react-hook-form";
 import { cn } from "@src/lib/utils";
+import { useRef } from "react";
+import { MarqueeText } from "@src/shared/components/topography";
 
 const MaterialForm = () => {
   const { getValues, setValue } = useFormContext();
@@ -82,6 +84,28 @@ const MaterialForm = () => {
     setMaterialList(x);
     setMaterialData(undefined);
   }
+
+  const ItemContainer = (props: { item: IDetailMaterial, index: number }) => {
+    const { item, index } = props;
+    const containerRef = useRef<HTMLDivElement>(null);
+    return (
+      <Card className={cn('w-[300px] items-center border border-amber-500', item._status && item._status === 'delete' ? 'bg-red-500 pointer-events-none border-red-400' : '')} onClick={() => handleShowInForm(item, index)}>
+        <CardContent className="flex space-x-2 h-4">
+          <div className="flex flex-col items-center justify-center">
+            <p>{item.itemNo}</p>
+            <MarqueeText
+              containerRef={containerRef as React.RefObject<HTMLDivElement>}
+              text={item.detailName ?? ''}
+            />
+          </div>
+          <Separator orientation="vertical" className="bg-amber-500"/>
+          <div className="ml-1 flex text-center items-center justify-center">
+            <p>{item.quantity} <span>{item.itemUnitName}</span></p>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
   return (
     <div className="relative">
       {loading && (
@@ -102,19 +126,12 @@ const MaterialForm = () => {
           <ScrollArea className="px-2 h-[350px] w-[350px] mt-3">
             <div className="flex flex-col justify-center items-center mt-2 text-[9pt] space-y-1">
               {
-                materialList.map((item, index) => (
-                  <Card key={index} className={cn('w-[300px] items-center border border-amber-500', item._status && item._status === 'delete' ? 'bg-red-500 pointer-events-none border-red-400' : '')} onClick={() => handleShowInForm(item, index)}>
-                    <CardContent className="flex space-x-2 h-4">
-                      <div className="flex flex-col items-center justify-center">
-                        <p>{item.itemNo}</p>
-                        <p>{item.detailName}</p>
-                      </div>
-                      <Separator orientation="vertical" className="bg-amber-500"/>
-                      <div className="ml-1 flex text-center items-center justify-center">
-                        <p>{item.quantity} <span>{item.itemUnitName}</span></p>
-                      </div>
-                    </CardContent>
-                  </Card>
+                materialList.filter(item => item._status !== 'delete').map((item, index) => (
+                  <ItemContainer
+                    key={index}
+                    item={item}
+                    index={index}
+                  />
                 ))
               }
             </div>

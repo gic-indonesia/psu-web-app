@@ -6,11 +6,16 @@ import { useFormContext } from "react-hook-form";
 import { IDetailMaterial } from "../../requests/create-production-formula.request";
 import { useEffect } from "react";
 import { IItemDetail } from "../../models/item-detail.model";
+import { ScrollArea } from "@src/components/ui/scroll-area";
 
 const MaterialModal = (props: { isOpen: boolean, onSubmit: (data: IDetailMaterial, index?: number) => void, onClose: () => void, option: IItemDetail, onDelete: (id: number) => void, i?: number }) => {
   const { isOpen, onClose, option, onSubmit, onDelete, i } = props;
 
   const { getValues, setValue } = useFormContext();
+
+  const priceToStringNumber = (price: string) => {
+    return price.replace(/\./g, "").replace(/,/g, ".")
+  }
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("id-ID").format(price);
@@ -32,7 +37,17 @@ const MaterialModal = (props: { isOpen: boolean, onSubmit: (data: IDetailMateria
 
   const handleSubmit = () => {
     const [ itemNo, detailName, quantity, itemUnitName, itemUnitId, standardCost, totalStandardCost, detailNotes ] = getValues(['materialCode', 'materialName', 'materialQuantity', 'materialDenom', 'materialUnitId', 'materialStdPrice', 'totalMaterialStdPrice', 'materialAnnotation']);
-    onSubmit({ itemNo, detailName, quantity, itemUnitId, itemUnitName, detailNotes, id: option.id ?? undefined, standardCost, totalStandardCost }, i);
+    onSubmit({
+      itemNo,
+      detailName,
+      quantity,
+      itemUnitId,
+      itemUnitName,
+      detailNotes,
+      id: option.id ?? undefined,
+      standardCost: priceToStringNumber(standardCost),
+      totalStandardCost: priceToStringNumber(totalStandardCost),
+    }, i);
   }
 
   const handleSumTotalPrice = (value: string) => {
@@ -52,7 +67,7 @@ const MaterialModal = (props: { isOpen: boolean, onSubmit: (data: IDetailMateria
       open={isOpen}
       onClose={onClose}
     >
-      <div className="flex flex-col space-y-3 p-2 mt-1 w-full">
+      <ScrollArea className="flex flex-col p-2 h-[450px] w-[350px] mt-1">
         <NoLabelInput
           id="materialUnitId"
           type="hidden"
@@ -105,7 +120,7 @@ const MaterialModal = (props: { isOpen: boolean, onSubmit: (data: IDetailMateria
           id='materialAnnotation'
           label='Keterangan'
         />
-        <div className="flex justify-between">
+        <div className="flex justify-between mt-4">
           {
             typeof option.id === 'number' || typeof i === 'number' ? (
               <Button
@@ -131,7 +146,7 @@ const MaterialModal = (props: { isOpen: boolean, onSubmit: (data: IDetailMateria
             Lanjut
           </Button>
         </div>
-      </div>
+      </ScrollArea>
     </Modal>
   )
 }

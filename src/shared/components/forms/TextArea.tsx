@@ -21,6 +21,7 @@ export default function TextArea({
   readOnly = false,
   hideError = false,
   validation,
+  className,
   ...rest
 }: TextAreaProps) {
   const {
@@ -48,7 +49,8 @@ export default function TextArea({
               : error
               ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
               : 'p-1 border-1 border-gray-300 focus:ring-1 focus:outline-1 focus:outline-amber-500 focus:ring-amber-500 focus:border-amber-500',
-            'block w-full rounded-md shadow-sm'
+            'block w-full rounded-md shadow-sm',
+            className,
           )}
           placeholder={placeholder}
           aria-describedby={id}
