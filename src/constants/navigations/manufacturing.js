@@ -1,10 +1,10 @@
-import { MdOutlineFactory } from 'react-icons/md'
+import { BuildingOffice2Icon } from "@heroicons/react/24/outline";
 
 const MANUFACTURING = [
   {
     title: 'Manufaktur',
     path: '/manufacturing',
-    icon: <MdOutlineFactory className='w-[23px]'/>,
+    icon: <BuildingOffice2Icon className="w-6 h-6"/>,
     submenu: true,
     subMenuItems: [
       { title: 'Formula Produksi', path: '/manufacturing/production-formula' },

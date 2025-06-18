@@ -5,4 +5,8 @@ export class AuthService {
   login(request: LoginRequest) {
     return axios.post('/api/login', request);
   }
+
+  logout() {
+    return axios.get('/api/logout');
+  }
 }

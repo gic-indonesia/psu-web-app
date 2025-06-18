@@ -39,6 +39,11 @@ export class ProductionFormulaService {
     return data;
   }
 
+  async getMaterialItems() {
+    const { data } = await baseInstance.get(`/api/item/list/produced?item_produced=0&material_produced=1&sp.page=1&sp.pageSize=1000`);
+    return data; 
+  }
+
   async getProcesses() {
     const { data } = await baseInstance.get(`/api/material/bill/process`)
     return data;

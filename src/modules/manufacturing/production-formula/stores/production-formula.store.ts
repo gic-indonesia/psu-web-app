@@ -35,6 +35,14 @@ export const fetchProducedItems = createAsyncThunk(
   }
 )
 
+export const fetchMaterialItems = createAsyncThunk(
+  'productionFormula/fetchMaterialItems',
+  async (): Promise<any> => {
+    const { d } = await ProductionFormulaService().getMaterialItems();
+    return d;
+  }
+)
+
 export const fetchProcesses = createAsyncThunk(
   'productionFormula/fetchProcesses',
   async (): Promise<any> => {
@@ -56,6 +64,7 @@ interface ProductionFormulaState {
   item: ItemDetail | undefined;
   filter: FilterProductionFormulaListRequest;
   producedItems: ProducedItem[] | undefined;
+  materialItems: ProducedItem[] | undefined;
   processes: Process[] | undefined;
 }
 
@@ -64,6 +73,7 @@ const initialState: ProductionFormulaState = {
   item: initialProductionFormulaItem(),
   filter: FilterProductionFormulaListRequest.createFromJson({}),
   producedItems: undefined,
+  materialItems: undefined,
   processes: undefined,
 };
 
@@ -98,6 +108,12 @@ export const productionFormulaSlice = createSlice({
       state.producedItems = action.payload.map((item: any) => new ProducedItem(item));
     });
     builder.addCase(fetchProducedItems.rejected, (state, action) => {
+      console.error('Error fetching produced items', action.error);
+    });
+    builder.addCase(fetchMaterialItems.fulfilled, (state, action) => {
+      state.materialItems = action.payload.map((item: any) => new ProducedItem(item));
+    });
+    builder.addCase(fetchMaterialItems.rejected, (state, action) => {
       console.error('Error fetching produced items', action.error);
     });
     builder.addCase(fetchProcesses.fulfilled, (state, action) => {

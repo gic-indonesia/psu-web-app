@@ -4,7 +4,7 @@ const HOME = [
   {
     title: 'Dashboard',
     path: '/',
-    icon: <HomeIcon className="w-[23px]"/>,
+    icon: <HomeIcon className="w-6 h-6"/>,
   },
 ]
 

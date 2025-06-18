@@ -25,6 +25,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@src/components/ui/popover"
+import { useState } from "react"
 
 interface IOption {
   value: string;
@@ -34,6 +35,7 @@ interface IOption {
 export default function SearchableSelectInput(props: { label: string, options: IOption[] & unknown, id: string, placeholder: string, onChange?: (option: IOption & unknown) => void, ifEmptyLabel?: string, className?: string }) {
   const { options, label, id, placeholder, onChange, ifEmptyLabel, className } = props;
   const { setValue, control } = useFormContext();
+  const [open, setOpen] = useState(false);
 
   return (
     <FormField
@@ -42,7 +44,7 @@ export default function SearchableSelectInput(props: { label: string, options: I
       render={({ field }) => (
         <FormItem className="flex flex-col">
           <FormLabel>{label}</FormLabel>
-          <Popover>
+          <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <FormControl>
                 <Button
@@ -83,6 +85,7 @@ export default function SearchableSelectInput(props: { label: string, options: I
                             onChange(option)
                           }
                           setValue(id, option.value)
+                          setOpen(false)
                         }}
                       >
                         {option.label}

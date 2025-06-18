@@ -75,7 +75,7 @@ const LoginForm = () => {
           if (to) {
             router.push(to.toString());
           } else {
-            router.push('/');
+            router.push('/manufacturing/production-formula');
           }
         } else {
           setProcessing(false);

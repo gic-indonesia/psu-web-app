@@ -1,7 +1,6 @@
 'use client'
 
 import { SearchableSelectInput } from "@src/shared/components/forms";
-import bahanBakuMock from "../../consts/bahanBakuMock";
 import { Separator } from "@src/components/ui/separator";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { Card, CardContent } from "@src/components/ui/card";
@@ -14,9 +13,11 @@ import { useFormContext } from "react-hook-form";
 import { cn } from "@src/lib/utils";
 import { useRef } from "react";
 import { MarqueeText } from "@src/shared/components/topography";
+import { useAppSelector } from "@src/hooks/redux";
 
 const MaterialForm = () => {
   const { getValues, setValue } = useFormContext();
+  const { materialItems } = useAppSelector(state => state.productionFormulaStore)
   const [materialList, setMaterialList] = useState<IDetailMaterial[]>(getValues('detailMaterial'));
   const [materialData, setMaterialData] = useState<IItemDetail & { index?: number } | undefined>(undefined);
   const [loading, setLoading] = useState(false);
@@ -91,7 +92,7 @@ const MaterialForm = () => {
     return (
       <Card className={cn('w-[300px] items-center border border-amber-500', item._status && item._status === 'delete' ? 'bg-red-500 pointer-events-none border-red-400' : '')} onClick={() => handleShowInForm(item, index)}>
         <CardContent className="flex space-x-2 h-4">
-          <div className="flex flex-col items-center justify-center">
+          <div className="flex flex-col items-center justify-center w-[200px]">
             <p>{item.itemNo}</p>
             <MarqueeText
               containerRef={containerRef as React.RefObject<HTMLDivElement>}
@@ -115,27 +116,33 @@ const MaterialForm = () => {
       )}
       <div className={loading ? "blur-sm pointer-events-none" : ""}>
         <div className="p-1 mt-1 w-full space-y-3">
-          <SearchableSelectInput
-            label="Bahan Baku"
-            id="materialSelect"
-            options={bahanBakuMock}
-            placeholder="Pilih Bahan Baku"
-            onChange={(value) => handleSelectMaterial(value)}
-            className="w-[350px] truncate overflow-hidden text-ellipsis whitespace-nowrap"
-          />
-          <ScrollArea className="px-2 h-[350px] w-[350px] mt-3">
-            <div className="flex flex-col justify-center items-center mt-2 text-[9pt] space-y-1">
-              {
-                materialList.filter(item => item._status !== 'delete').map((item, index) => (
-                  <ItemContainer
-                    key={index}
-                    item={item}
-                    index={index}
-                  />
-                ))
-              }
-            </div>
-          </ScrollArea>
+          {
+            materialItems && (
+              <SearchableSelectInput
+                label="Bahan Baku"
+                id="materialSelect"
+                options={materialItems.map((c) => ({ value: String(c.id), label: c.name }))}
+                placeholder="Pilih Bahan Baku"
+                onChange={(value) => handleSelectMaterial(value)}
+                className="w-[350px] truncate overflow-hidden text-ellipsis whitespace-nowrap"
+              />
+            )
+          }
+          <div className="relative overflow-auto">
+            <ScrollArea className="px-2 h-[400px] w-[350px] mt-3">
+              <div className="flex flex-col justify-center items-center mt-2 text-[9pt] space-y-1">
+                {
+                  materialList.filter(item => item._status !== 'delete').map((item, index) => (
+                    <ItemContainer
+                      key={index}
+                      item={item}
+                      index={index}
+                    />
+                  ))
+                }
+              </div>
+            </ScrollArea>
+          </div>
         </div>
         {
           materialData && (

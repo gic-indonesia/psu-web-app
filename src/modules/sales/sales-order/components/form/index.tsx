@@ -243,7 +243,7 @@ const SalesOrderForm = (props: { item?: SalesOrderListDetailModel }) => {
     return (
       <Card key={index} className={cn('w-[300px] items-center border border-amber-500', item._status && item._status === 'delete' ? 'bg-red-500 pointer-events-none border-red-400' : '')} onClick={() => handleShowInForm(item, index)}>
         <CardContent className="flex items-center space-x-2 h-5">
-          <div>
+          <div className="w-[200px]">
             <div ref={container2Ref} className="marquee-container flex flex-col items-center justify-center">
               <MarqueeText
                 containerRef={container2Ref as React.RefObject<HTMLDivElement>}
@@ -351,19 +351,21 @@ const SalesOrderForm = (props: { item?: SalesOrderListDetailModel }) => {
                     null
                   )
                 }
-                <ScrollArea className="px-2 h-[300px] w-[350px] mt-3">
-                  <div className="flex flex-col justify-center items-center mt-2 text-[9pt] space-y-1">
-                    {
-                      goods.filter(item => item._status !== 'delete').map((item, index) => (
-                        <ItemContainer
-                          key={index}
-                          item={item}
-                          index={index}
-                        />
-                      ))
-                    }
-                  </div>
-                </ScrollArea>
+                <div className="relative overflow-auto">
+                  <ScrollArea className="px-2 h-[350px] w-[350px] mt-3">
+                    <div className="flex flex-col justify-center items-center mt-2 text-[9pt] space-y-1">
+                      {
+                        goods.filter(item => item._status !== 'delete').map((item, index) => (
+                          <ItemContainer
+                            key={index}
+                            item={item}
+                            index={index}
+                          />
+                        ))
+                      }
+                    </div>
+                  </ScrollArea>
+                </div>
                 {/* <div className="flex gap-1 p-2 border border-amber-500 rounded-md ring-1 ring-amber-500">
                     <div>
                       <Input

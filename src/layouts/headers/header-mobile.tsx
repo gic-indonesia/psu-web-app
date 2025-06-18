@@ -6,8 +6,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import SIDENAV_ITEMS from "@src/constants/navigations/side-nav-items";
 import { SideNavItem } from "@shared/types/side-nav-items";
-import { ChevronDownIcon } from "@heroicons/react/24/solid";
+import { ArrowRightStartOnRectangleIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
 import { motion, useCycle } from "framer-motion";
+import { cn } from "@src/lib/utils";
+import { AuthService } from "@src/modules/auth/services";
+import { StorageService } from "@src/shared/local-storage";
+import { useRouter } from "next/navigation";
+import { Label } from "@src/components/ui/label";
 
 type MenuItemWithSubMenuProps = {
   item: SideNavItem;
@@ -38,6 +43,20 @@ const HeaderMobile = () => {
   const containerRef = useRef(null);
   const { height } = useDimensions(containerRef);
   const [isOpen, toggleOpen] = useCycle(false, true);
+  const router = useRouter();
+
+  const handleLogout = () => {
+    AuthService()
+      .logout()
+      .then(() => {
+        const storageService = StorageService()
+        storageService.drop();
+        router.push('/')
+      })
+      .catch((e) => {
+        console.error(e);
+      })
+  }
 
   return (
     <motion.nav
@@ -61,19 +80,23 @@ const HeaderMobile = () => {
       >
         {SIDENAV_ITEMS.map((item: SideNavItem, idx) => {
           const isLastItem = idx === SIDENAV_ITEMS.length - 1;
-
+          const isActive = item.path === pathname;
           return (
             <div key={idx}>
               {item.submenu ? (
                 <MenuItemWithSubMenu item={item} toggleOpen={toggleOpen} />
               ) : (
-                <MenuItem>
+                <MenuItem
+                  className={cn(
+                    "flex gap-1 items-center px-2 w-full rounded-md",
+                    isActive ? "bg-gray-100" : "hover:bg-gray-100"
+                  )}
+                >
+                  {item.icon}
                   <Link
                     href={item.path}
                     onClick={() => toggleOpen()}
-                    className={`p-3 rounded-lg flex w-full text-lg font-medium transition ${
-                      item.path === pathname ? "font-bold" : ""
-                    }`}
+                    className={`p-2 rounded-lg flex w-full text-lg font-medium transition`}
                   >
                     {item.title}
                   </Link>
@@ -86,6 +109,19 @@ const HeaderMobile = () => {
             </div>
           );
         })}
+        <div onClick={() => handleLogout()}>
+          <MenuItem className="h-px w-full bg-gray-300" />
+          <MenuItem
+            className={cn(
+              "flex gap-1 items-center px-2 w-full mt-4 rounded-md",
+            )}
+          >
+            <ArrowRightStartOnRectangleIcon className="w-6 h-6"/>
+            <Label className='p-2 rounded-lg flex w-full text-lg font-medium transition'>
+              Logout
+            </Label>
+          </MenuItem>
+        </div>
       </motion.ul>
       {/* Menu Toggle Button */}
       <MenuToggle toggle={toggleOpen} />
@@ -164,17 +200,16 @@ const MenuItemWithSubMenu: React.FC<MenuItemWithSubMenuProps> = ({
     <>
       <MenuItem>
         <button
-          className="p-3 rounded-lg flex w-full text-lg font-medium transition"
+          className={`p-2 rounded-lg flex w-full text-lg font-medium transition`}
           onClick={() => setSubMenuOpen(!subMenuOpen)}
         >
           <div className="flex flex-row justify-between w-full items-center">
-            <span
-              className={`${
-                pathname.includes(item.path) ? "font-bold" : ""
-              }`}
-            >
-              {item.title}
-            </span>
+            <div className="flex flex-row items-center gap-3">
+              {item.icon}
+              <span>
+                {item.title}
+              </span>
+            </div>
             <div
               className={`transform transition-transform ${
                 subMenuOpen && "rotate-180"
@@ -185,18 +220,23 @@ const MenuItemWithSubMenu: React.FC<MenuItemWithSubMenuProps> = ({
           </div>
         </button>
       </MenuItem>
-      <div className="mt-2 ml-4 flex flex-col space-y-2">
+      <div className={`mt-2 ml-3 flex flex-col rounded-md space-y-2`}>
         {subMenuOpen && (
           <>
             {item.subMenuItems?.map((subItem, subIdx) => {
+              const isActive = pathname === subItem.path;
               return (
-                <MenuItem key={subIdx} className="ml-1 my-1">
+                <MenuItem
+                  key={subIdx}
+                  className={cn(
+                    "w-full px-4 py-2 rounded-md",
+                    isActive ? "bg-gray-100" : "hover:bg-gray-100"
+                  )}
+                >
                   <Link
                     href={subItem.path}
                     onClick={() => toggleOpen()}
-                    className={`text-sm hover:underline ${
-                      subItem.path.includes(pathname) ? "font-bold" : ""
-                    }`}
+                    className="block w-full text-sm font-medium"
                   >
                     {subItem.title}
                   </Link>

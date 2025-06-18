@@ -14,6 +14,7 @@ export class StorageService {
   }
 
   drop() {
+    console.log('drop')
     secureLocalStorage.clear();
   }
 }

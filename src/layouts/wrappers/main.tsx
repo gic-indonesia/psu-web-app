@@ -23,7 +23,7 @@ export default function Main(props: { children: ReactNode }) {
 
   useEffect(() => {
     if (blockAccess) {
-      router.push(`/auth?to=/`)
+      router.push(`/auth?to=/manufacturing/production-formula`)
     }
   }, [blockAccess, router, pathname])
 

@@ -17,7 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input, NoLabelInput, SearchableSelectInput, SelectInput } from "@src/shared/components/forms";
 import { Switch } from "@src/components/ui/switch";
 import { useAppDispatch, useAppSelector } from "@src/hooks/redux";
-import { fetchList, fetchProcesses, fetchProducedItems } from "../../stores/production-formula.store";
+import { fetchList, fetchMaterialItems, fetchProcesses, fetchProducedItems } from "../../stores/production-formula.store";
 import * as z from "zod";
 import { Button } from "@src/shared/components/buttons";
 import { Separator } from "@src/components/ui/separator";
@@ -45,6 +45,7 @@ const ProductionFormulaForm = (props: { item?: IItemDetail }) => {
   useEffect(() => {
     dispatch(fetchProducedItems());
     dispatch(fetchProcesses());
+    dispatch(fetchMaterialItems());
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
