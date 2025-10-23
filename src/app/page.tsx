@@ -1,15 +1,5 @@
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <div className="flex items-center justify-center">
-        <h1 className="text-4xl font-bold">Welcome to Next.js!</h1>
-      </div>
-      <div className="flex items-center justify-center">
-        <p className="text-lg">This is a simple layout example.</p>
-      </div>
-      <div className="flex items-center justify-center">
-        <p className="text-sm">Footer content goes here.</p>
-      </div>
-    </div>
+    <iframe className="w-full min-h-screen" src="https://lookerstudio.google.com/embed/reporting/5a50a699-7e1a-4b5e-b2c2-c6900665c6af/page/p_tm90y2jqtd" frameBorder="0" style={{ border: 0 }} allowFullScreen sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
   );
 }
