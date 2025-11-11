@@ -7,9 +7,15 @@ export interface IProducedItem {
   name: string
   itemTypeName: string
   id: number
-  itemProduced: number
-  materialProduced: number
-  unit: string[];
+  unit1Name: string | null;
+  unit2Name: string | null;
+  unit3Name: string | null;
+  unit4Name: string | null;
+  unit5Name: string | null;
+  ratio2: number | null;
+  ratio3: number | null;
+  ratio4: number | null;
+  ratio5: number | null;
 }
 
 export class ProducedItem {
@@ -21,9 +27,15 @@ export class ProducedItem {
   name: string
   itemTypeName: string
   id: number
-  itemProduced: number
-  materialProduced: number
-  unit: string[];
+  unit1Name: string | null;
+  unit2Name: string | null;
+  unit3Name: string | null;
+  unit4Name: string | null;
+  unit5Name: string | null;
+  ratio2: number | null;
+  ratio3: number | null;
+  ratio4: number | null;
+  ratio5: number | null;
 
   constructor(data: IProducedItem) {
     this.no = data.no;
@@ -34,8 +46,14 @@ export class ProducedItem {
     this.name = data.name;
     this.itemTypeName = data.itemTypeName;
     this.id = data.id;
-    this.itemProduced = data.itemProduced;
-    this.materialProduced = data.materialProduced;
-    this.unit = data.unit;
+    this.unit1Name = data.unit1Name;
+    this.unit2Name = data.unit2Name;
+    this.unit3Name = data.unit3Name;
+    this.unit4Name = data.unit4Name;
+    this.unit5Name = data.unit5Name;
+    this.ratio2 = data.ratio2;
+    this.ratio3 = data.ratio3;
+    this.ratio4 = data.ratio4;
+    this.ratio5 = data.ratio5;
   }
 }

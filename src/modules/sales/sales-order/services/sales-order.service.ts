@@ -25,7 +25,7 @@ export class SalesOrderService {
   }
 
   async getItem() {
-    const { data } = await baseInstance.get(`/api/item/list?fields=id,name,no&sp.start=0&sp.page=1&sp.pageSize=10000`);
+    const { data } = await baseInstance.get(`/api/item/list?fields=id,name,no&sp.start=0&sp.page=1&sp.pageSize=10000&filter.itemCategoryId.op=EQUAL&filter.itemCategoryId.val[0]=144`);
     return data;
   }
 

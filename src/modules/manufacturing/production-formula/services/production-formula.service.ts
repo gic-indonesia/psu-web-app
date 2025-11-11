@@ -2,6 +2,7 @@ import baseInstance from "@src/shared/axios/base-instance";
 import { FilterProductionFormulaListRequest } from "../requests/filter-production-formula-list.request";
 import { CreateProductionFormulaRequest } from "../requests/create-production-formula.request";
 import { UpdateProductionFormulaRequest } from "../requests/update-production-formula.request";
+import { appendParams } from "@src/lib/utils";
 
 export class ProductionFormulaService {
   constructor() {}
@@ -35,13 +36,43 @@ export class ProductionFormulaService {
   }
 
   async getProducedItems() {
-    const { data } = await baseInstance.get(`/api/item/list/produced?item_produced=1&sp.page=1&sp.pageSize=1000`)
+    const options = {
+      fields: 'charField1,charField2,additionalCost,cogsGlAccountId,controlQuantity,cost,defStandardCost,deliveryLeadTime,id,itemCategoryId,itemType,itemTypeName,minimumQuantityReorder,name,no,notes,serialNumberType,unit1Id,unit2Id,unit3Id,unit4Id,unit5Id,itemUnit,ratio2,ratio3,ratio4,ratio5,availableToSell,balanceUnitCost,balanceTotalCost',
+      sp: {
+        page: '1',
+        pageSize: '1000',
+        sort: 'name',
+      },
+      filter: {
+        itemCategoryId: {
+          op: 'EQUAL',
+          val: ['144']
+        }
+      }
+    }
+    const filter = appendParams(options);
+    const { data } = await baseInstance.get(`/api/item/list?${filter.toString()}`)
     return data;
   }
 
   async getMaterialItems() {
-    const { data } = await baseInstance.get(`/api/item/list/produced?item_produced=0&material_produced=1&sp.page=1&sp.pageSize=1000`);
-    return data; 
+    const options = {
+      fields: 'charField1,charField2,additionalCost,cogsGlAccountId,controlQuantity,cost,defStandardCost,deliveryLeadTime,id,itemCategoryId,itemType,itemTypeName,minimumQuantityReorder,name,no,notes,serialNumberType,unit1Id,unit2Id,unit3Id,unit4Id,unit5Id,itemUnit,ratio2,ratio3,ratio4,ratio5,availableToSell,balanceUnitCost,balanceTotalCost',
+      sp: {
+        page: '1',
+        pageSize: '1000',
+        sort: 'name',
+      },
+      filter: {
+        itemCategoryId: {
+          op: 'EQUAL',
+          val: ['152', '201', '103', '102']
+        }
+      }
+    }
+    const filter = appendParams(options);
+    const { data } = await baseInstance.get(`/api/item/list?${filter.toString()}`)
+    return data;
   }
 
   async getProcesses() {

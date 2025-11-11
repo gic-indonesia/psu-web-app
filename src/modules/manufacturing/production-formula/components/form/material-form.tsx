@@ -58,6 +58,7 @@ const MaterialForm = () => {
         .then((r) => {
           setLoading(false);
           const { d } = r;
+          console.log('d', d);
           const item = ItemDetail.createFromJson(d);
           setMaterialData({...item, id: undefined});
         })
@@ -71,6 +72,7 @@ const MaterialForm = () => {
     } else {
       x.push(data);
     }
+    setValue('materialQuantity', undefined);
     setMaterialList(x);
     setMaterialData(undefined);
   }

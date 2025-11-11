@@ -22,6 +22,10 @@ export interface IItemDetail {
   unit3?: IItemUnit | null;
   unit4?: IItemUnit | null;
   unit5?: IItemUnit | null;
+  ratio2?: number;
+  ratio3?: number;
+  ratio4?: number;
+  ratio5?: number;
   unit1Id: number;
   balanceUnitCost: string;
   detailNotes: string;
@@ -37,6 +41,10 @@ export class ItemDetail {
   unit3?: ItemUnit | null;
   unit4?: ItemUnit | null;
   unit5?: ItemUnit | null;
+  ratio2?: number;
+  ratio3?: number;
+  ratio4?: number;
+  ratio5?: number;
   unit1Id: number;
   balanceUnitCost: string;
   detailNotes: string;
@@ -51,6 +59,10 @@ export class ItemDetail {
     this.unit3 = itemDetail.unit3;
     this.unit4 = itemDetail.unit4;
     this.unit5 = itemDetail.unit5;
+    this.ratio2 = itemDetail.ratio2;
+    this.ratio3 = itemDetail.ratio3;
+    this.ratio4 = itemDetail.ratio4;
+    this.ratio5 = itemDetail.ratio5;
     this.unit1Id = itemDetail.unit1Id;
     this.balanceUnitCost = itemDetail.balanceUnitCost;
     this.detailNotes = itemDetail.detailNotes;

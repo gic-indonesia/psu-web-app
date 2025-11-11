@@ -64,3 +64,33 @@ export const toCurrency = (value: number, currency: string = 'IDR', locale: stri
     currency,
   }).format(value);
 }
+
+export function appendParams(
+  obj: Record<string, any>,
+  filter = new URLSearchParams(),
+  prefix?: string
+): URLSearchParams {
+  for (const key in obj) {
+    if (!Object.prototype.hasOwnProperty.call(obj, key)) continue;
+
+    const value = obj[key];
+    if (value === undefined || value === null || value === '') continue;
+
+    const paramKey = prefix ? `${prefix}.${key}` : key;
+
+    if (Array.isArray(value)) {
+      // 🧩 jika array, append dengan index [0], [1], dst
+      value.forEach((v, i) => {
+        filter.append(`${paramKey}[${i}]`, v.toString());
+      });
+    } else if (typeof value === 'object') {
+      // 🧱 jika object, recursive
+      appendParams(value, filter, paramKey);
+    } else {
+      // 🧾 jika primitive
+      filter.append(paramKey, value.toString());
+    }
+  }
+
+  return filter;
+}

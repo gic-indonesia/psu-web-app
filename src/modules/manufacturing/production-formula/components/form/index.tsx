@@ -36,7 +36,7 @@ const ProductionFormulaForm = (props: { item?: IItemDetail }) => {
   const router = useRouter();
   const { filter, producedItems } = useAppSelector((state) => state.productionFormulaStore);
   const [isAutoNumbering, setIsAutoNumbering] = useState(!item);
-  const [denomOptions, setDenomOptions] = useState<string[]>([]);
+  const [denomOptions, setDenomOptions] = useState<Record<string, number> | undefined>(undefined);
   const [processing, setProcessing] = useState(false);
 
   type CreateFormData = z.infer<typeof schema>;
@@ -53,7 +53,7 @@ const ProductionFormulaForm = (props: { item?: IItemDetail }) => {
     if (item && producedItems) {
       const goods = producedItems.find((c) => c.id === item.item.id);
       if (goods) {
-        setDenomOptions(goods.unit);
+        setDenomOptions(buildUnitRatios(goods));
       }
     }
   }, [item, producedItems])
@@ -158,8 +158,35 @@ const ProductionFormulaForm = (props: { item?: IItemDetail }) => {
         });
   }
 
-  const handleChangeProducedItem = (value: { label: string, value: string, unit: string[] }) => {
+  const handleChangeProducedItem = (value: { label: string, value: string, unit: Record<string, number> }) => {
     setDenomOptions(value.unit);
+  }
+
+  function buildUnitRatios(apiData: Record<string, any>) {
+    const unitEntries: { name: string; ratio: number; index: number }[] = []
+
+    Object.entries(apiData).forEach(([key, value]) => {
+      if (key.startsWith("unit") && key.endsWith("Name")) {
+        const index = Number(key.replace("unit", "").replace("Name", ""))
+        if (!value) return // skip null or empty unit names
+
+        const ratioKey = `ratio${index}`
+        const ratio = index === 1 ? 1 : apiData[ratioKey] ?? 1
+
+        unitEntries.push({ name: value as string, ratio, index })
+      }
+    })
+
+    // Sort by index (so unit1Name always comes first)
+    unitEntries.sort((a, b) => a.index - b.index)
+
+    // Convert back to object
+    const result: Record<string, number> = {}
+    unitEntries.forEach((u) => {
+      result[u.name] = u.ratio
+    })
+
+    return result
   }
 
   return (
@@ -176,7 +203,7 @@ const ProductionFormulaForm = (props: { item?: IItemDetail }) => {
                 <SearchableSelectInput
                   label="Produk Utama"
                   id="itemNo"
-                  options={producedItems.map((c) => ({ label: c.name, value: c.no, unit: c.unit }))}
+                  options={producedItems.map((c) => ({ label: c.name, value: c.no, unit: buildUnitRatios(c) }))}
                   placeholder="Pilih Produk Utama"
                   ifEmptyLabel="Tidak ada produk yang ditemukan"
                   onChange={(value) => handleChangeProducedItem(value as any)}
@@ -192,10 +219,10 @@ const ProductionFormulaForm = (props: { item?: IItemDetail }) => {
                 labelClassName="font-medium"
               />
               {
-                denomOptions.length > 0 ? (
+                denomOptions ? (
                   <SelectInput
                     id="itemUnitName"
-                    options={denomOptions.map((c) => ({ label: c, value: c }))}
+                    options={Object.keys(denomOptions).map((c) => ({ label: c, value: c }))}
                     placeholder="Pilih Satuan"
                     className={`mt-3 ${errors.itemUnitName ? 'mt-4' : ''}`}
                   />
@@ -234,13 +261,12 @@ const ProductionFormulaForm = (props: { item?: IItemDetail }) => {
           <Separator className="mb-2 bg-amber-500" />
           <div className="flex flex-col items-center justify-center">
             <TabsList>
-              <TabsTrigger value="process" className="pointer-events-none">Tahapan</TabsTrigger>
               <TabsTrigger value="material">Bahan Baku</TabsTrigger>
             </TabsList>
           </div>
-          <TabsContent value="process">
+          {/* <TabsContent value="process">
             <ProductAndStagesForm/>
-          </TabsContent>
+          </TabsContent> */}
           <TabsContent value="material">
             <MaterialForm/>
           </TabsContent>
