@@ -22,8 +22,8 @@ interface IOption {
   label: string;
 }
 
-export default function SelectForm(props: { label?: string, placeholder: string, id: string, options: IOption[], defaultValue?: string, className?: string }) {
-  const { label, placeholder, id, options, defaultValue, className } = props;
+export default function SelectForm(props: { label?: string, placeholder: string, id: string, options: IOption[], defaultValue?: string, className?: string, disabled?: boolean, onChange?: (value: string) => void }) {
+  const { label, placeholder, id, options, defaultValue, className, disabled = false, onChange } = props;
   const form = useFormContext()
 
   return (
@@ -36,7 +36,15 @@ export default function SelectForm(props: { label?: string, placeholder: string,
           className={cn('w-full max-w-full overflow-hidden', className)}
         >
           <FormLabel className="text-black max-w-full">{label ?? ''}</FormLabel>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <Select
+            disabled={disabled}
+            onValueChange={(value) => {
+              field.onChange(value)
+              if (onChange) {
+                onChange(value);
+              }
+            }}
+            defaultValue={field.value}>
             <FormControl className="max-w-full">
               <SelectTrigger
                 className="bg-white w-full max-w-full text-black"

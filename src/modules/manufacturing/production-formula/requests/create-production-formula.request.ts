@@ -48,6 +48,7 @@ export interface IDetailMaterial {
   id?: number;
   itemUnitName: string; //NAMA SATUAN
   itemUnitId: number;
+  processCategoryName: string;
   projectNo?: string;
   standardCost: string;
   totalStandardCost: string;
@@ -73,6 +74,7 @@ export class DetailMaterial {
   id?: number;
   itemUnitName: string;
   itemUnitId: number;
+  processCategoryName: string;
   projectNo?: string;
   standardCost: number;
   totalStandardCost: number;
@@ -97,6 +99,7 @@ export class DetailMaterial {
     this.id = data.id;
     this.itemUnitName = data.itemUnitName;
     this.itemUnitId = data.itemUnitId;
+    this.processCategoryName = data.processCategoryName;
     this.projectNo = data.projectNo;
     this.standardCost = Number(data.standardCost);
     this.totalStandardCost = Number(data.totalStandardCost);
@@ -107,7 +110,7 @@ export interface ICreateProductionFormulaRequest {
   itemNo: string;
   quantity: string;
   transDate: string;
-  branchId: number;
+  branchId: string;
   branchName: string;
   typeAutoNumber?: number;
   description?: string;
@@ -136,8 +139,8 @@ export class CreateProductionFormulaRequest {
     this.itemNo = data.itemNo;
     this.quantity = Number(data.quantity);
     this.transDate = format(new Date(data.transDate), 'dd/MM/yyyy');
-    this.branchId = data.branchId ?? 155;
-    this.branchName = data.branchName ?? 'PREMIX';
+    this.branchId = Number(data.branchId);
+    this.branchName = data.branchName;
     this.typeAutoNumber = data.typeAutoNumber ?? 301;
     this.description = data.description;
     this.itemUnitName = data.itemUnitName;
@@ -156,6 +159,14 @@ export class CreateProductionFormulaRequest {
       branchId: z.string().optional(),
       branchName: z.string().optional(),
       number: z.string().optional(),
+      detailProcess: z.array(z.object({
+        instruction: z.string().optional(),
+        processCategoryName: z.string(),
+        sortNumber: z.string(),
+        subCon: z.boolean().optional(),
+        _status: z.string().optional(),
+        id: z.number().optional(),
+      })).optional(),
       detailMaterial: z.array(z.object({
         detailName: z.string(),
         detailNotes: z.string().optional(),
@@ -165,15 +176,8 @@ export class CreateProductionFormulaRequest {
         _status: z.string().optional(),
         id: z.number().optional(),
         standardCost: z.string(),
-        totalStandardCost: z.string(),
-      })).optional(),
-      detailProcess: z.array(z.object({
-        instruction: z.string().optional(),
         processCategoryName: z.string(),
-        sortNumber: z.string(),
-        subCon: z.boolean().optional(),
-        _status: z.string().optional(),
-        id: z.number().optional(),
+        totalStandardCost: z.string(),
       })).optional(),
     });
   }

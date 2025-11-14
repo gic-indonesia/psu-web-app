@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { DatePicker, Input, SearchableSelectInput, SelectInput, TextArea } from "@src/shared/components/forms";
 import { Switch } from "@src/components/ui/switch";
 import { useAppDispatch, useAppSelector } from "@src/hooks/redux";
-import { fetchSalesOrderList, fetchCustomers, fetchItems } from "../../stores/sales-order.store";
+import { fetchSalesOrderList, fetchCustomers, fetchItems, fetchPaymentTerm } from "../../stores/sales-order.store";
 import * as z from "zod";
 import { Button } from "@src/shared/components/buttons";
 import { Separator } from "@src/components/ui/separator";
@@ -36,7 +36,7 @@ const SalesOrderForm = (props: { item?: SalesOrderListDetailModel }) => {
   const { item } = props;
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { filter, customers, items } = useAppSelector((state) => state.salesOrderStore);
+  const { filter, customers, items, paymentTerms } = useAppSelector((state) => state.salesOrderStore);
   const [isAutoNumbering, setIsAutoNumbering] = useState(!item);
   const [loading, setLoading] = useState<boolean>(false);
   const [processing, setProcessing] = useState(false);
@@ -47,6 +47,7 @@ const SalesOrderForm = (props: { item?: SalesOrderListDetailModel }) => {
   useEffect(() => {
     dispatch(fetchCustomers());
     dispatch(fetchItems());
+    dispatch(fetchPaymentTerm());
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -285,6 +286,7 @@ const SalesOrderForm = (props: { item?: SalesOrderListDetailModel }) => {
           <DatePicker
             id="transDate"
             label="Tanggal"
+            rule={(date: Date) => date < new Date("1900-01-01")}
             className="w-[350px]"
           />
           <div className="flex space-x-8 items-center">
@@ -292,7 +294,7 @@ const SalesOrderForm = (props: { item?: SalesOrderListDetailModel }) => {
               !isAutoNumbering ? (
                 <Input
                   id="number"
-                  className="text-sm w-[350px]"
+                  className="text-base w-[280px]"
                   label="No Pesanan #"
                   labelClassName="font-medium"
                 />
@@ -320,12 +322,37 @@ const SalesOrderForm = (props: { item?: SalesOrderListDetailModel }) => {
               )
             }
           </div>
+          {
+            paymentTerms && (
+              <SearchableSelectInput
+                label="Syarat Pembayaran"
+                id="paymentTermName"
+                options={paymentTerms.map((c) => ({ label: c.name, value: c.name }))}
+                placeholder="Pilih Syarat Pembayaran"
+                ifEmptyLabel="Tidak ada syarat pembayaran yang ditemukan"
+                className="w-[350px] truncate overflow-hidden text-ellipsis whitespace-nowrap"
+              />
+            )
+          }
           <TextArea
             id="description"
             label="Keterangan"
-            className="w-[350px] text-sm"
+            className="w-[350px] text-base"
             placeholder=""
           />
+          {/* <DatePicker
+            id="shipDate"
+            label="Tgl Pengiriman"
+            rule={(date: Date) => date < new Date("1900-01-01")}
+            className="w-[350px]"
+          />
+          <SelectInput
+            defaultValue={'54'}
+            label={"No Pesanan #"}
+            id="salesOrderNo"
+            options={[{ value: '54', label: 'Pesanan Penjualan' }]}
+            placeholder="Pilih Formula Produksi"
+          /> */}
         </div>
         <Separator className="mb-2 bg-amber-500" />
         {

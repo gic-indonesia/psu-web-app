@@ -9,6 +9,7 @@ import { SalesOrderListDetailModel } from "../models/sales-order-detail.model";
 import { FilterSalesOrderListRequest } from "../requests/filter-sales-order.request";
 import { ItemListModel } from "../models/item-list.model";
 import { StorageService } from "@src/shared/local-storage";
+import { PaymentTermModel } from "../models/payment-term.model";
 
 export const fetchCustomers = createAsyncThunk(
   'salesOrder/fetchCustomer',
@@ -43,6 +44,14 @@ export const fetchSalesOrderDetail = createAsyncThunk(
   }
 )
 
+export const fetchPaymentTerm = createAsyncThunk(
+  'salesOrder/fetchPaymentTerm',
+  async (): Promise<PaymentTermModel[]> => {
+    const { d } = await SalesOrderService().getPaymentTerm();
+    return d;
+  }
+)
+
 const initialSalesOrderItem = () => {
   const item = StorageService().get('salesOrderItem');
   if (item && typeof item === 'object') {
@@ -57,6 +66,7 @@ interface SalesOrderState {
   filter: FilterSalesOrderListRequest;
   customers: CustomerModel[] | undefined;
   items: ItemListModel[] | undefined;
+  paymentTerms: PaymentTermModel[] | undefined;
 }
 
 const initialState: SalesOrderState = {
@@ -65,6 +75,7 @@ const initialState: SalesOrderState = {
   filter: FilterSalesOrderListRequest.createFromJson({}),
   customers: undefined,
   items: undefined,
+  paymentTerms: undefined,
 };
 
 export const salesOrderSlice = createSlice({
@@ -105,6 +116,12 @@ export const salesOrderSlice = createSlice({
     });
     builder.addCase(fetchItems.rejected, (state, action) => {
       console.error('Error fetching item list:', action.error);
+    });
+    builder.addCase(fetchPaymentTerm.fulfilled, (state, action) => {
+      state.paymentTerms = action.payload.map((i) => new PaymentTermModel(i));
+    });
+    builder.addCase(fetchPaymentTerm.rejected, (state, action) => {
+      console.error(`Error fetching payment term: ${action.error}`);
     });
   }
 })

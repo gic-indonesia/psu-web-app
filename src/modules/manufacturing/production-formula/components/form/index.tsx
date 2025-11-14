@@ -11,7 +11,7 @@ import {
 // import ProductAndStagesForm from "./process-form";
 import { Form } from "@src/components/ui/form";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { CreateProductionFormulaRequest, ICreateProductionFormulaRequest } from "../../requests/create-production-formula.request";
+import { CreateProductionFormulaRequest, ICreateProductionFormulaRequest, IDetailProcess } from "../../requests/create-production-formula.request";
 import MaterialForm from "./material-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input, NoLabelInput, SearchableSelectInput, SelectInput } from "@src/shared/components/forms";
@@ -26,6 +26,7 @@ import { IItemDetail } from "../../models/production-formula-detail.model";
 import { useRouter } from "next/navigation";
 import { IUpdateProductionFormulaRequest, UpdateProductionFormulaRequest } from "../../requests/update-production-formula.request";
 import { Bounce, toast } from "react-toastify";
+import branches from "../../consts/branches";
 
 const schema = CreateProductionFormulaRequest.schema();
 const updateSchema = UpdateProductionFormulaRequest.schema()
@@ -70,6 +71,7 @@ const ProductionFormulaForm = (props: { item?: IItemDetail }) => {
         itemUnitId: c.itemUnitId,
         standardCost: String(c.standardCost),
         totalStandardCost: String(c.totalStandardCost),
+        // processCategoryName: c.processCategory?.name,
         _status: undefined,
       }))
 
@@ -95,7 +97,7 @@ const ProductionFormulaForm = (props: { item?: IItemDetail }) => {
     }
   })
 
-  const { handleSubmit, formState } = methods;
+  const { setValue, handleSubmit, formState } = methods;
 
   const { errors } = formState;
 
@@ -136,18 +138,31 @@ const ProductionFormulaForm = (props: { item?: IItemDetail }) => {
   }
 
   const onSubmit: SubmitHandler<ICreateProductionFormulaRequest | IUpdateProductionFormulaRequest> = (value) => {
+    if (!value.branchName || (value.branchName && value.branchName === '')) {
+      alert('Cabang belum diisi');
+      return;
+    }
     setProcessing(true);
-    let params = CreateProductionFormulaRequest.createFromJson({...value, number: value.number && value.number !== '' ? value.number : undefined, typeAutoNumber: value.number && value.number !== '' ? undefined : 301 });
+    const detailProcess: IDetailProcess[] = [
+      {
+        processCategoryName: 'PENCAMPURAN',
+        sortNumber: '1',
+      }
+    ]
+    let params = CreateProductionFormulaRequest.createFromJson({...value, detailProcess, detailMaterial: value.detailMaterial, number: value.number && value.number !== '' ? value.number : undefined, typeAutoNumber: value.number && value.number !== '' ? undefined : 301 });
     if (item) {
       params = UpdateProductionFormulaRequest.createFromJson({
         ...value,
+        detailProcess,
+        detailMaterial: value.detailMaterial,
         number: value.number && value.number !== '' ? value.number : undefined,
         typeAutoNumber: value.number && value.number !== '' ? undefined : 301,
         id: item.id,
       })
     }
+    console.log('params', params);
     ProductionFormulaService()
-      .save(params)
+      .save({...params, detailProcess: params.detailProcess, detailMaterial: params.detailMaterial})
         .then((res) => {
           const { d, s } = res;
           showOnSuccessToast(Array.isArray(d) && d[0] ? d[0] : '', s);
@@ -216,6 +231,7 @@ const ProductionFormulaForm = (props: { item?: IItemDetail }) => {
                 id="quantity"
                 label="Kuantitas"
                 type="number"
+                className="text-base"
                 labelClassName="font-medium"
               />
               {
@@ -238,6 +254,7 @@ const ProductionFormulaForm = (props: { item?: IItemDetail }) => {
                     id="number"
                     label="No Formula #"
                     labelClassName="font-medium"
+                    className="text-base"
                   />
                 ) : (
                   <SelectInput
@@ -257,6 +274,23 @@ const ProductionFormulaForm = (props: { item?: IItemDetail }) => {
                 }}
               />
             </div>
+            {
+              branches ? (
+                <SelectInput
+                  id="branchId"
+                  label="Cabang"
+                  options={branches.map((c) => ({ label: c.label, value: `${c.id}` }))}
+                  placeholder="Pilih Cabang"
+                  onChange={(val) => {
+                    const branch = branches.find((c) => `${c.id}` === val);
+                    setValue('branchName', branch?.label);
+                  }}
+                  className={`mt-3 ${errors.branchId ? 'mt-4' : ''}`}
+                />
+              ) : (
+                null
+              )
+            }
           </div>
           <Separator className="mb-2 bg-amber-500" />
           <div className="flex flex-col items-center justify-center">

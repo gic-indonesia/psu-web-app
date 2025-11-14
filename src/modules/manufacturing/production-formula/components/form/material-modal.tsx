@@ -37,6 +37,13 @@ const MaterialModal = (props: { isOpen: boolean, onSubmit: (data: IDetailMateria
 
   const handleSubmit = () => {
     const [ itemNo, detailName, quantity, itemUnitName, itemUnitId, standardCost, totalStandardCost, detailNotes ] = getValues(['materialCode', 'materialName', 'materialQuantity', 'materialDenom', 'materialUnitId', 'materialStdPrice', 'totalMaterialStdPrice', 'materialAnnotation']);
+    
+    if (!quantity || (quantity && quantity === '')) {
+      alert('Kuantitas harus diisi');
+      document.getElementById('materialQuantity')?.focus();
+      return;
+    }
+
     onSubmit({
       itemNo,
       detailName,
@@ -47,6 +54,7 @@ const MaterialModal = (props: { isOpen: boolean, onSubmit: (data: IDetailMateria
       id: option.id ?? undefined,
       standardCost: priceToStringNumber(standardCost),
       totalStandardCost: priceToStringNumber(totalStandardCost),
+      processCategoryName: 'PENCAMPURAN',
     }, i);
   }
 
@@ -76,6 +84,7 @@ const MaterialModal = (props: { isOpen: boolean, onSubmit: (data: IDetailMateria
           readOnly
           id="materialCode"
           label="Kode #"
+          className="text-base"
           value={getValues('materialCode')}
           labelClassName="font-medium"
         />
@@ -83,40 +92,46 @@ const MaterialModal = (props: { isOpen: boolean, onSubmit: (data: IDetailMateria
           readOnly
           id="materialName"
           label="Nama Barang"
+          className="text-base"
           value={getValues('materialName')}
-          labelClassName="font-medium"
+          labelClassName="font-medium mt-3"
         />
         <Input
           id="materialQuantity"
           label="Kuantitas"
           type="number"
+          className="text-base"
           defaultValue={getValues('materialQuantity')}
-          labelClassName="font-medium"
+          labelClassName="font-medium mt-3"
           onChange={(e) => handleSumTotalPrice(e.target.value)}
         />
         <Input
           readOnly
           id="materialDenom"
           label="Satuan"
+          className="text-base"
           value={getValues('materialDenom')}
-          labelClassName="font-medium"
+          labelClassName="font-medium mt-3"
         />
         <Input
           readOnly
           id="materialStdPrice"
           label="Harga Standar"
+          className="text-base"
           value={getValues('materialStdPrice')}
-          labelClassName="font-medium"
+          labelClassName="font-medium mt-3"
         />
         <Input
           readOnly
           id="totalMaterialStdPrice"
           label="Total Harga Standar"
+          className="text-base mb-3"
           value={getValues('totalMaterialStdPrice')}
-          labelClassName="font-medium"
+          labelClassName="font-medium mt-3"
         />
         <TextArea
           readOnly={false}
+          className="text-base"
           id='materialAnnotation'
           label='Keterangan'
         />

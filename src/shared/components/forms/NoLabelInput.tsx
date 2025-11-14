@@ -34,6 +34,7 @@ export default function NoLabelInput({
   readOnly = false,
   hideError = false,
   validation,
+  className,
   ...rest
 }: InputProps) {
   const {
@@ -57,7 +58,8 @@ export default function NoLabelInput({
                 errors[id] ? 
                   'text-gray-900 ring-inset ring-red-600 placeholder:text-red-600 focus:ring-2 focus:ring-inset focus:border-red-500 focus:ring-red-600' : 
                     'text-gray-900 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-amber-600',
-            'ring-[1px] bg-white ring-inset block w-full focus:outline-none rounded-md px-1.5 py-1.5 sm:text-sm sm:leading-6'
+            'ring-[1px] bg-white ring-inset block w-full focus:outline-none rounded-md px-1.5 py-1.5 sm:text-sm sm:leading-6',
+            className
           )}
           placeholder={placeholder}
           aria-describedby={id}

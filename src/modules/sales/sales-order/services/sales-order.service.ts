@@ -33,4 +33,9 @@ export class SalesOrderService {
     const { data } = await baseInstance.get(`/api/customer/list?fields=id,name,customerNo,category&sp.page=1&sp.pageSize=1000&sp.sort=name`)
     return data;
   }
+
+  async getPaymentTerm() {
+    const { data } = await baseInstance.get(`/api/payment-term/list?sp.page=1&sp.pageSize=1000`);
+    return data;
+  }
 }

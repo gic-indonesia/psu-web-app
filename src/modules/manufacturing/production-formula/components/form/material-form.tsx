@@ -2,6 +2,7 @@
 
 import { SearchableSelectInput } from "@src/shared/components/forms";
 import { Separator } from "@src/components/ui/separator";
+import { Badge } from "@src/components/ui/badge";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { Card, CardContent } from "@src/components/ui/card";
 import { IDetailMaterial } from "../../requests/create-production-formula.request";
@@ -19,11 +20,12 @@ const MaterialForm = () => {
   const { getValues, setValue } = useFormContext();
   const { materialItems } = useAppSelector(state => state.productionFormulaStore)
   const [materialList, setMaterialList] = useState<IDetailMaterial[]>(getValues('detailMaterial'));
-  const [materialData, setMaterialData] = useState<IItemDetail & { index?: number } | undefined>(undefined);
+  const [materialData, setMaterialData] = useState<IItemDetail & { processCategoryName: string, index?: number } | undefined>(undefined);
   const [loading, setLoading] = useState(false);
 
 
   useEffect(() => {
+    console.log('material', materialList)
     setValue('detailMaterial', materialList);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [materialList])
@@ -41,6 +43,7 @@ const MaterialForm = () => {
       unit1Id: item.itemUnitId ?? 0,
       detailNotes: item.detailNotes && item.detailNotes !== null ? item.detailNotes : '',
       balanceUnitCost: String(item.standardCost),
+      processCategoryName: item.processCategoryName,
       index: i,
     })
   }
@@ -58,14 +61,15 @@ const MaterialForm = () => {
         .then((r) => {
           setLoading(false);
           const { d } = r;
-          console.log('d', d);
           const item = ItemDetail.createFromJson(d);
-          setMaterialData({...item, id: undefined});
+          setMaterialData({...item, processCategoryName: 'PENCAMPURAN', id: undefined});
+          // setMaterialData({...item, id: undefined})
         })
         .catch((e) => console.log('error', e));
   }
 
   const handleSubmitMaterial = (data: IDetailMaterial, i?: number) => {
+    console.log('data', data);
     const x = materialList.map((c) => c);
     if (typeof i === 'number') {
       x.splice(i, 1, data);
@@ -92,7 +96,7 @@ const MaterialForm = () => {
     const { item, index } = props;
     const containerRef = useRef<HTMLDivElement>(null);
     return (
-      <Card className={cn('w-[300px] items-center border border-amber-500', item._status && item._status === 'delete' ? 'bg-red-500 pointer-events-none border-red-400' : '')} onClick={() => handleShowInForm(item, index)}>
+      <Card className={cn('flex w-[300px] h-[100px] items-center justify-center border border-amber-500', item._status && item._status === 'delete' ? 'bg-red-500 pointer-events-none border-red-400' : '')} onClick={() => handleShowInForm(item, index)}>
         <CardContent className="flex space-x-2 h-4">
           <div className="flex flex-col items-center justify-center w-[200px]">
             <p>{item.itemNo}</p>
@@ -100,6 +104,7 @@ const MaterialForm = () => {
               containerRef={containerRef as React.RefObject<HTMLDivElement>}
               text={item.detailName ?? ''}
             />
+            <Badge variant='secondary'>{item.processCategoryName}</Badge>
           </div>
           <Separator orientation="vertical" className="bg-amber-500"/>
           <div className="ml-1 flex text-center items-center justify-center">

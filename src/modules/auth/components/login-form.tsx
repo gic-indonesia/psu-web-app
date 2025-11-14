@@ -75,7 +75,7 @@ const LoginForm = () => {
           if (to) {
             router.push(to.toString());
           } else {
-            router.push('/manufacturing/production-formula');
+            router.push('/dashboard/sales');
           }
         } else {
           setProcessing(false);

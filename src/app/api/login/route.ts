@@ -26,6 +26,10 @@ export async function POST(request: Request) {
       }
     )
 
+    console.log('intToken', intToken)
+    console.log('email', email);
+    console.log('dbId', dbId);
+
     const loginAccurate = await axios.post(
       `${process.env.NEXT_PUBLIC_API_URL}/oauth/token/redis`,
       {
@@ -48,6 +52,8 @@ export async function POST(request: Request) {
         secure: false,
       }
     )
+
+    console.log('accurateToken', accurateToken);
 
     const openDbResult = await axios.post(
       `${process.env.NEXT_PUBLIC_API_URL}/api/open-db-sequence`,

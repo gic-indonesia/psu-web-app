@@ -16,9 +16,13 @@ import { CalendarIcon } from "lucide-react"
 import { cn } from "@src/lib/utils"
 import { format } from "date-fns"
 import { useFormContext } from "react-hook-form"
+import { Matcher } from "react-day-picker"
 
-export default function DatePicker(props: { label: string, id: string, className?: string }) {
-  const { label, id, className } = props;
+
+const defaultRule = (date: Date) => date > new Date() || date < new Date("1900-01-01");
+
+export default function DatePicker(props: { label: string, id: string, className?: string, rule?: Matcher | Matcher[]  }) {
+  const { label, id, className, rule = defaultRule } = props;
   const form = useFormContext();
   return (
     <FormField
@@ -52,9 +56,7 @@ export default function DatePicker(props: { label: string, id: string, className
                 mode="single"
                 selected={field.value}
                 onSelect={field.onChange}
-                disabled={(date) =>
-                  date > new Date() || date < new Date("1900-01-01")
-                }
+                disabled={rule}
                 initialFocus
               />
             </PopoverContent>

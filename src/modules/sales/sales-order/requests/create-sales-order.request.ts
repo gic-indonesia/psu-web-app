@@ -113,8 +113,8 @@ export class CreateSalesOrderRequest {
 
   constructor(item: ICreateSalesOrderRequest) {
     this.customerNo = item.customerNo;
-    this.branchId = item.branchId ? Number(item.branchId) : 155;
-    this.branchName = item.branchName ?? 'PREMIX';
+    this.branchId = item.branchId ? Number(item.branchId) : 50;
+    this.branchName = item.branchName ?? 'Kantor Pusat';
     this.cashDiscPercent = item.cashDiscPercent;
     this.cashDiscount = item.cashDiscount ? Number(item.cashDiscount) : 0;
     this.currencyCode = item.currencyCode;

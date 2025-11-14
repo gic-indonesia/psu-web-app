@@ -67,6 +67,11 @@ const ItemModal = (props: { isOpen: boolean, onSubmit: (data: IDetailItemSalesOr
       'itemWarehouseId',
       'itemAnnotation'
     ]);
+    if (!quantity || (quantity && quantity === '')) {
+      alert('Kuantitas harus diisi');
+      document?.getElementById('itemQuantity')?.focus();
+      return;
+    }
     const itemUnitName = units && units.find(c => c.id === Number(itemUnitId))?.name;
     onSubmit({
       itemNo,
@@ -129,27 +134,31 @@ const ItemModal = (props: { isOpen: boolean, onSubmit: (data: IDetailItemSalesOr
           label="Kode #"
           value={getValues('itemCode')}
           labelClassName="font-medium"
+          className="text-base"
         />
         <Input
           readOnly
           id="itemName"
           label="Nama Barang"
           value={getValues('itemName')}
-          labelClassName="font-medium"
+          labelClassName="font-medium mt-3"
+          className="text-base"
         />
         <Input
           id="itemQuantity"
           label="Kuantitas"
           type="number"
           defaultValue={getValues('itemQuantity')}
-          labelClassName="font-medium"
+          labelClassName="font-medium mt-3"
           onChange={(e) => handleSumTotalPrice(e.target.value)}
+          className="text-base"
         />
         {
           units ? (
             <SelectInput
               id="itemDenom"
               label="Satuan"
+              className="mt-3"
               defaultValue={getValues('itemDenom')}
               options={units.map(c => ({ value: String(c.id), label: c.name}))}
               placeholder="Pilih satuan"
@@ -161,11 +170,13 @@ const ItemModal = (props: { isOpen: boolean, onSubmit: (data: IDetailItemSalesOr
         <Input
           id="itemStdPrice"
           label="@Harga"
+          type="number"
           defaultValue={getValues('itemStdPrice')}
-          labelClassName="font-medium"
+          labelClassName="font-medium mt-3"
           onChange={(e) => handleChangeUnitPrice(e.target.value)}
+          className="text-base"
         />
-        <div className="flex items-end space-x-1">
+        <div className="flex items-end space-x-1 mt-3">
           <Input
             id="itemDiscount"
             type="number"
@@ -173,11 +184,13 @@ const ItemModal = (props: { isOpen: boolean, onSubmit: (data: IDetailItemSalesOr
             defaultValue={getValues('itemDiscount')}
             onChange={(e) => handleChangeDiscount(e.target.value)}
             labelClassName="font-medium"
+            className="text-base"
           />
           <NoLabelInput
             id="itemDiscountPrice"
             defaultValue={getValues('itemDiscountPrice')}
             readOnly
+            className="text-base"
           />
         </div>
         <Input
@@ -185,7 +198,8 @@ const ItemModal = (props: { isOpen: boolean, onSubmit: (data: IDetailItemSalesOr
           id="totalItemStdPrice"
           label="Total Harga"
           value={getValues('totalItemStdPrice')}
-          labelClassName="font-medium"
+          labelClassName="font-medium mt-3"
+          className="text-base mb-3"
         />
         {/* {
           warehouses ? (
@@ -203,6 +217,7 @@ const ItemModal = (props: { isOpen: boolean, onSubmit: (data: IDetailItemSalesOr
           readOnly={false}
           id='itemAnnotation'
           label='Keterangan'
+          className="text-base"
         />
         <div className="flex justify-between mt-4">
           {

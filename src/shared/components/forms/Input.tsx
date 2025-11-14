@@ -47,6 +47,17 @@ export default function Input({
     formState: { errors },
   } = useFormContext();
 
+  const onKeyDownNumber = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (
+      !(
+        (e.key >= '0' && e.key <= '9') || // numbers
+        ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(e.key)
+      )
+    ) {
+      e.preventDefault()
+    }
+  }
+
   return (
     <div>
       <label
@@ -72,6 +83,11 @@ export default function Input({
             'ring-[1px] bg-white ring-inset block w-full focus:outline-none rounded-md px-1.5 py-1.5 sm:text-sm sm:leading-6',
             className,
           )}
+          onKeyDown={(e) => {
+            if (type === 'number') {
+              onKeyDownNumber(e);
+            }
+          }}
           placeholder={placeholder}
           aria-describedby={id}
         />

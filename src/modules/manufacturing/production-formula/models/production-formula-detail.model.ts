@@ -34,6 +34,10 @@ export interface IDetailMaterialModel {
   itemId: number;
   itemUnitId: number;
   standardCost: number;
+  processCategory: {
+    name: string;
+    id: number;
+  } | null
   totalStandardCost: number;
 }
 
@@ -73,6 +77,10 @@ export class DetailMaterialModel {
   itemId: number;
   itemUnitId: number;
   standardCost: number;
+  processCategory: {
+    name: string;
+    id: number;
+  } | null
   totalStandardCost: number;
 
   constructor(data: IDetailMaterialModel) {
@@ -84,6 +92,7 @@ export class DetailMaterialModel {
     this.itemId = data.itemId
     this.itemUnitId = data.itemUnitId
     this.standardCost = data.standardCost;
+    this.processCategory = data.processCategory;
     this.totalStandardCost = data.totalStandardCost;
   }
 }
