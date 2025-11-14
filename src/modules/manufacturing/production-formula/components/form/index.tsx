@@ -147,6 +147,8 @@ const ProductionFormulaForm = (props: { item?: IItemDetail }) => {
       {
         processCategoryName: 'PENCAMPURAN',
         sortNumber: '1',
+        subCon: false,
+        instruction: '',
       }
     ]
     let params = CreateProductionFormulaRequest.createFromJson({...value, detailProcess, detailMaterial: value.detailMaterial, number: value.number && value.number !== '' ? value.number : undefined, typeAutoNumber: value.number && value.number !== '' ? undefined : 301 });
