@@ -71,7 +71,7 @@ const ProductionFormulaForm = (props: { item?: IItemDetail }) => {
         itemUnitId: c.itemUnitId,
         standardCost: String(c.standardCost),
         totalStandardCost: String(c.totalStandardCost),
-        // processCategoryName: c.processCategory?.name,
+        processCategoryName: c.processCategory?.name,
         _status: undefined,
       }))
 
