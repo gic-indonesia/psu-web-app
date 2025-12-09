@@ -55,8 +55,6 @@ export async function POST(request: Request) {
 
     console.log('accurateToken', accurateToken);
 
-    setTimeout(() => console.log('callback'), 1000)
-
     const openDbResult = await axios.post(
       `${process.env.NEXT_PUBLIC_API_URL}/api/open-db-sequence`,
       { id: dbId },
