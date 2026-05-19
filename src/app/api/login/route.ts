@@ -5,6 +5,7 @@ import axios from "axios";
 
 export async function POST(request: Request) {
   try {
+    console.log('Login Portal....')
     const email = process.env.NEXT_PUBLIC_EMAIL;
     const dbId = process.env.NEXT_PUBLIC_DATABASE_ID;
     const body = await request.json();
@@ -14,6 +15,7 @@ export async function POST(request: Request) {
         ...body,
       }
     )
+    console.log('Success Login portal.')
     const cookieStore = await cookies();
     const intToken = loginRes.data.token ?? ''
     
