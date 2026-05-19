@@ -57,6 +57,8 @@ export async function POST(request: Request) {
 
     console.log('accurateToken', accurateToken);
 
+    console.log('Open DB...')
+
     const openDbResult = await axios.post(
       `${process.env.NEXT_PUBLIC_API_URL}/api/open-db-sequence`,
       { id: dbId },
@@ -67,6 +69,8 @@ export async function POST(request: Request) {
         }
       }
     )
+
+    console.log('Success Open DB.')
     cookieStore.set(
       'sessionId',
       openDbResult.data.session,
