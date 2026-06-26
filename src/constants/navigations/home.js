@@ -8,6 +8,7 @@ const HOME = [
     submenu: true,
     subMenuItems: [
       { title: 'Produk', path: '/dashboard/product' },
+      { title: 'Bahan Baku', path: '/dashboard/raw-material' },
       { title: 'Penjualan', path: '/dashboard/sales' },
     ],
   },

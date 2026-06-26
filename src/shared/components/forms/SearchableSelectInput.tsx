@@ -51,7 +51,7 @@ export default function SearchableSelectInput(props: { label: string, options: I
                   variant="outline"
                   role="combobox"
                   className={cn(
-                    "justify-between",
+                    "w-full justify-between",
                     className,
                     !field.value && "text-muted-foreground"
                   )}
@@ -67,7 +67,7 @@ export default function SearchableSelectInput(props: { label: string, options: I
                 </Button>
               </FormControl>
             </PopoverTrigger>
-            <PopoverContent className="p-0">
+            <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
               <Command>
                 <CommandInput
                   placeholder={placeholder}

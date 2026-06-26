@@ -15,7 +15,7 @@ import { useAppDispatch } from "@src/hooks/redux";
 import { LoginDataModel } from "../models/auth.model";
 import { useRouter, useSearchParams } from "next/navigation";
 import { handleLogin } from "../stores/auth.store";
-import { Bounce, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 const schema = LoginRequest.schema();
 
@@ -31,19 +31,7 @@ const LoginForm = () => {
   })
 
   const showLoginToast = (fullname: string, role: string) => {
-    toast.success(`Welcome ${fullname}, you have successfully logged in as ${role}`, {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: false,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      transition: Bounce,
-      className: 'rounded-md',
-      style: { width: '300px' }
-      });
+    toast.success(`Welcome ${fullname}, you have successfully logged in as ${role}`);
   }
 
   const onFinish: SubmitHandler<ILoginRequest> = (values: z.infer<typeof schema>) => {
@@ -84,17 +72,7 @@ const LoginForm = () => {
       .catch((e: AxiosError) => {
         const error = e as AxiosError;
         setProcessing(false)
-        toast.error(`${error.response?.data}`, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          transition: Bounce,
-        });
+        toast.error(`${error.response?.data}`);
         console.log(error);
       })
   };

@@ -6,15 +6,8 @@ import { SearchInput } from "@src/shared/components/forms";
 import { Button, IconButton } from "@src/shared/components/buttons";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { Plus } from "lucide-react";
-import {
-  TooltipProvider,
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-} from '@src/components/ui/tooltip';
 import { Edit } from "lucide-react";
 import { Card, CardContent } from "@src/components/ui/card";
-import { ScrollArea } from "@src/components/ui/scroll-area";
 import { Separator } from "@src/components/ui/separator";
 import ItemContainer from "./item-container";
 import ItemDetailModal from "./item-detail-modal";
@@ -66,58 +59,49 @@ const SalesOrderList = () => {
 
   return (
     <Fragment>
-       <div className="flex flex-col">
+       <div className="flex w-full flex-col">
         <Title>Pesanan Penjualan</Title>
-        <div className="flex items-center px-2 py-2">
-          <div>
-            <FormProvider {...methods}>
-              <form onSubmit={handleSubmit(onSubmit)} className="flex items-center gap-3">
+        <div className="w-full px-2 py-2">
+          <FormProvider {...methods}>
+            <form onSubmit={handleSubmit(onSubmit)} className="flex w-full items-start gap-2">
+              <div className="flex-1">
                 <SearchInput
                   id="search"
                   placeholder="Search..."
                 />
-                <Button
-                  variant="primary"
-                  type="submit"
-                  className="flex justify-center w-[87px] rounded-md mb-1"
-                  size="base"
-                >
-                  Cari
-                </Button>
-              </form>
-            </FormProvider>
-          </div>
+              </div>
+              <Button
+                variant="primary"
+                type="submit"
+                className="flex shrink-0 justify-center rounded-md px-4 py-2"
+                size="base"
+              >
+                Cari
+              </Button>
+            </form>
+          </FormProvider>
         </div>
-        <div className="px-3">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  leftIcon={Plus}
-                  variant="primary"
-                  className="rounded-md"
-                  onClick={() => router.push('/sales/sales-order/form')}
-                >
-                  Tambah Data
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Tambah Data</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+        <div className="w-full px-2">
+          <Button
+            leftIcon={Plus}
+            variant="primary"
+            className="flex w-full justify-center rounded-md"
+            onClick={() => router.push('/sales/sales-order/form')}
+          >
+            Tambah Data
+          </Button>
         </div>
-        <ScrollArea className="px-2 h-[500px] w-[370px] mt-3">
-          <div className="mt-2 text-[9pt] space-y-1">
+        <div className="mt-3 w-full px-1">
+          <div className="mt-2 space-y-2 text-sm">
             {
               data && data.d && data.d.map((item, index) => (
-                <Card key={index} className="w-[355px]" onClick={() => handleShowDetail(item)}>
-                  <CardContent className="flex space-x-2 h-14">
+                <Card key={index} className="w-full" onClick={() => handleShowDetail(item)}>
+                  <CardContent className="flex items-center space-x-2 px-3 py-2">
                     <ItemContainer
                       item={item}
                     />
-                    <Separator orientation="vertical"/>
-                    <div className="ml-1 flex space-x-1 items-center">
+                    <Separator orientation="vertical" className="h-10"/>
+                    <div className="flex shrink-0 items-center">
                       <IconButton
                         variant="outline"
                         icon={Edit}
@@ -132,7 +116,7 @@ const SalesOrderList = () => {
               ))
             }
           </div>
-        </ScrollArea>
+        </div>
         {
           data && (
             <MobilePagination

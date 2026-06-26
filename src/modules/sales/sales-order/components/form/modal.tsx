@@ -123,7 +123,7 @@ const ItemModal = (props: { isOpen: boolean, onSubmit: (data: IDetailItemSalesOr
       open={isOpen}
       onClose={onClose}
     >
-      <ScrollArea className="flex flex-col p-2 h-[450px] w-[350px] mt-1">
+      <ScrollArea className="flex w-full max-h-[60vh] flex-col p-1 mt-1">
         <NoLabelInput
           id="itemUnitId"
           type="hidden"

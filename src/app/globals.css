@@ -147,30 +147,8 @@
   --font-inter: 'Inter', sans-serif;
 }
 
+html,
 body {
   font-family: var(--font-inter);
-}
-
-.marquee-container {
-  overflow: hidden;
-  white-space: nowrap;
-  position: relative;
-}
-
-.marquee-text {
-  display: inline-block;
-}
-
-.marquee-animate {
-  padding-left: 100%;
-  animation: marquee 10s linear infinite;
-}
-
-@keyframes marquee {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
+  overflow-x: hidden;
 }

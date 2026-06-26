@@ -12,8 +12,6 @@ import { IItemDetail, ItemDetail } from "../../models/item-detail.model";
 import MaterialModal from "./material-modal";
 import { useFormContext } from "react-hook-form";
 import { cn } from "@src/lib/utils";
-import { useRef } from "react";
-import { MarqueeText } from "@src/shared/components/topography";
 import { useAppSelector } from "@src/hooks/redux";
 
 const MaterialForm = () => {
@@ -94,20 +92,16 @@ const MaterialForm = () => {
 
   const ItemContainer = (props: { item: IDetailMaterial, index: number }) => {
     const { item, index } = props;
-    const containerRef = useRef<HTMLDivElement>(null);
     return (
-      <Card className={cn('flex w-[300px] h-[100px] items-center justify-center border border-amber-500', item._status && item._status === 'delete' ? 'bg-red-500 pointer-events-none border-red-400' : '')} onClick={() => handleShowInForm(item, index)}>
-        <CardContent className="flex space-x-2 h-4">
-          <div className="flex flex-col items-center justify-center w-[200px]">
-            <p>{item.itemNo}</p>
-            <MarqueeText
-              containerRef={containerRef as React.RefObject<HTMLDivElement>}
-              text={item.detailName ?? ''}
-            />
-            <Badge variant='secondary'>{item.processCategoryName}</Badge>
+      <Card className={cn('flex w-full items-center justify-center border border-amber-500', item._status && item._status === 'delete' ? 'bg-red-500 pointer-events-none border-red-400' : '')} onClick={() => handleShowInForm(item, index)}>
+        <CardContent className="flex w-full items-center space-x-2 px-3 py-2">
+          <div className="flex min-w-0 flex-1 flex-col">
+            <p className="truncate font-medium">{item.itemNo}</p>
+            <p className="truncate text-gray-600">{item.detailName ?? ''}</p>
+            <Badge variant='secondary' className="mt-1 w-fit">{item.processCategoryName}</Badge>
           </div>
-          <Separator orientation="vertical" className="bg-amber-500"/>
-          <div className="ml-1 flex text-center items-center justify-center">
+          <Separator orientation="vertical" className="h-12 bg-amber-500"/>
+          <div className="flex shrink-0 items-center text-center">
             <p>{item.quantity} <span>{item.itemUnitName}</span></p>
           </div>
         </CardContent>
@@ -131,13 +125,13 @@ const MaterialForm = () => {
                 options={materialItems.map((c) => ({ value: String(c.id), label: c.name }))}
                 placeholder="Pilih Bahan Baku"
                 onChange={(value) => handleSelectMaterial(value)}
-                className="w-[350px] truncate overflow-hidden text-ellipsis whitespace-nowrap"
+                className="w-full"
               />
             )
           }
-          <div className="relative overflow-auto">
-            <ScrollArea className="px-2 h-[400px] w-[350px] mt-3">
-              <div className="flex flex-col justify-center items-center mt-2 text-[9pt] space-y-1">
+          <div className="relative w-full">
+            <ScrollArea className="mt-3 w-full max-h-[45vh] overflow-y-auto">
+              <div className="mt-2 flex w-full flex-col space-y-2 text-sm">
                 {
                   materialList.filter(item => item._status !== 'delete').map((item, index) => (
                     <ItemContainer

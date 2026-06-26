@@ -17,7 +17,7 @@ import { SalesOrderService } from "../../services";
 import { SalesOrderListDetailModel } from "../../models/sales-order-detail.model";
 import { useRouter } from "next/navigation";
 import { IUpdateSalesOrderRequest, UpdateSalesOrderRequest } from "../../requests/update-sales-order.request";
-import { Bounce, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { ScrollArea } from "@src/components/ui/scroll-area";
 import { Card, CardContent } from "@src/components/ui/card";
 import { ProductionFormulaService } from "@src/modules/manufacturing/production-formula/services";
@@ -26,8 +26,6 @@ import { IDetailItemSalesOrderRequest } from "../../requests/create-sales-order.
 import { cn } from "@src/lib/utils";
 import ItemModal from "./modal";
 import { parse } from 'date-fns';
-import { useRef } from "react";
-import { MarqueeText } from "@src/shared/components/topography";
 
 const schema = CreateSalesOrderRequest.schema();
 const updateSchema = UpdateSalesOrderRequest.schema()
@@ -136,34 +134,10 @@ const SalesOrderForm = (props: { item?: SalesOrderListDetailModel }) => {
 
   const showOnSuccessToast = (message: string, success: boolean) => {
     if (!success) {
-      toast.error(message, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-        className: 'rounded-md',
-        style: { width: '300px' }
-        });
+      toast.error(message);
       setProcessing(false);
     } else {
-      toast.success(message, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-        className: 'rounded-md',
-        style: { width: '300px' }
-        });
+      toast.success(message);
       dispatch(fetchSalesOrderList(filter));
       setProcessing(false);
       router.push('/sales/sales-order');
@@ -197,7 +171,7 @@ const SalesOrderForm = (props: { item?: SalesOrderListDetailModel }) => {
     const customerNo = getValues('customerNo');
     const transDate = getValues('transDate');
     if (!customerNo || !transDate) {
-      alert('Silahkan isi customer dan tanggal terlebih dahulu');
+      toast.error('Silahkan isi customer dan tanggal terlebih dahulu');
       return;
     }
     setLoading(true);
@@ -239,27 +213,15 @@ const SalesOrderForm = (props: { item?: SalesOrderListDetailModel }) => {
 
   const ItemContainer = (props: { item: IDetailItemSalesOrderRequest, index: number }) => {
     const { item, index } = props;
-    const container2Ref = useRef<HTMLDivElement>(null);
-    const containerRef = useRef<HTMLDivElement>(null);
     return (
-      <Card key={index} className={cn('w-[300px] items-center border border-amber-500', item._status && item._status === 'delete' ? 'bg-red-500 pointer-events-none border-red-400' : '')} onClick={() => handleShowInForm(item, index)}>
-        <CardContent className="flex items-center space-x-2 h-5">
-          <div className="w-[200px]">
-            <div ref={container2Ref} className="marquee-container flex flex-col items-center justify-center">
-              <MarqueeText
-                containerRef={container2Ref as React.RefObject<HTMLDivElement>}
-                text={item.itemNo ?? ''}
-              />
-            </div>
-            <div ref={containerRef} className="marquee-container flex flex-col items-center justify-center">
-              <MarqueeText
-                containerRef={containerRef as React.RefObject<HTMLDivElement>}
-                text={item.detailName ?? ''}
-              />
-            </div>
+      <Card key={index} className={cn('w-full items-center border border-amber-500', item._status && item._status === 'delete' ? 'bg-red-500 pointer-events-none border-red-400' : '')} onClick={() => handleShowInForm(item, index)}>
+        <CardContent className="flex items-center space-x-2 px-3 py-2">
+          <div className="min-w-0 flex-1">
+            <p className="truncate font-medium">{item.itemNo ?? ''}</p>
+            <p className="truncate text-gray-600">{item.detailName ?? ''}</p>
           </div>
-          <Separator orientation="vertical" className="bg-amber-500"/>
-          <div className="ml-1 flex text-center items-center justify-center">
+          <Separator orientation="vertical" className="h-8 bg-amber-500"/>
+          <div className="flex shrink-0 items-center text-center">
             <p>{item.quantity} <span>{item.itemUnitName}</span></p>
           </div>
         </CardContent>
@@ -279,7 +241,7 @@ const SalesOrderForm = (props: { item?: SalesOrderListDetailModel }) => {
                 options={customers.map((c) => ({ label: c.name, value: c.customerNo, unit: c.category }))}
                 placeholder="Pilih Customer"
                 ifEmptyLabel="Tidak ada customer yang ditemukan"
-                className="w-[350px] truncate overflow-hidden text-ellipsis whitespace-nowrap"
+                className="w-full"
               />
             )
           }
@@ -287,34 +249,36 @@ const SalesOrderForm = (props: { item?: SalesOrderListDetailModel }) => {
             id="transDate"
             label="Tanggal"
             rule={(date: Date) => date < new Date("1900-01-01")}
-            className="w-[350px]"
+            className="w-full"
           />
-          <div className="flex space-x-8 items-center">
-            {
-              !isAutoNumbering ? (
-                <Input
-                  id="number"
-                  className="text-base w-[280px]"
-                  label="No Pesanan #"
-                  labelClassName="font-medium"
-                />
-              ) : (
-                <SelectInput
-                  defaultValue={'54'}
-                  label={"No Pesanan #"}
-                  id="salesOrderNo"
-                  options={[{ value: '54', label: 'Pesanan Penjualan' }]}
-                  placeholder="Pilih Formula Produksi"
-                />
-              )
-            }
+          <div className="flex items-end gap-3">
+            <div className="min-w-0 flex-1">
+              {
+                !isAutoNumbering ? (
+                  <Input
+                    id="number"
+                    className="text-base w-full"
+                    label="No Pesanan #"
+                    labelClassName="font-medium"
+                  />
+                ) : (
+                  <SelectInput
+                    defaultValue={'54'}
+                    label={"No Pesanan #"}
+                    id="salesOrderNo"
+                    options={[{ value: '54', label: 'Pesanan Penjualan' }]}
+                    placeholder="Pilih Formula Produksi"
+                  />
+                )
+              }
+            </div>
             {
               item ? (
                 null
               ) : (
                 <Switch
                   defaultChecked={isAutoNumbering}
-                  className="mt-4"
+                  className="mb-2 shrink-0"
                   onCheckedChange={(checked) => {
                     setIsAutoNumbering(checked)
                   }}
@@ -330,14 +294,14 @@ const SalesOrderForm = (props: { item?: SalesOrderListDetailModel }) => {
                 options={paymentTerms.map((c) => ({ label: c.name, value: c.name }))}
                 placeholder="Pilih Syarat Pembayaran"
                 ifEmptyLabel="Tidak ada syarat pembayaran yang ditemukan"
-                className="w-[350px] truncate overflow-hidden text-ellipsis whitespace-nowrap"
+                className="w-full"
               />
             )
           }
           <TextArea
             id="description"
             label="Keterangan"
-            className="w-[350px] text-base"
+            className="w-full text-base"
             placeholder=""
           />
           {/* <DatePicker
@@ -372,15 +336,15 @@ const SalesOrderForm = (props: { item?: SalesOrderListDetailModel }) => {
                       options={items.map((c) => ({ label: c.name, value: String(c.id), no: c.no }))}
                       placeholder="Pilih Barang & Jasa"
                       onChange={(value) => handleSelectGoods(value)}
-                      className="w-[350px] truncate overflow-hidden text-ellipsis whitespace-nowrap"
+                      className="w-full"
                     />
                   ) : (
                     null
                   )
                 }
-                <div className="relative overflow-auto">
-                  <ScrollArea className="px-2 h-[350px] w-[350px] mt-3">
-                    <div className="flex flex-col justify-center items-center mt-2 text-[9pt] space-y-1">
+                <div className="relative w-full overflow-auto">
+                  <ScrollArea className="mt-3 w-full max-h-[45vh]">
+                    <div className="mt-2 flex w-full flex-col space-y-2 text-sm">
                       {
                         goods.filter(item => item._status !== 'delete').map((item, index) => (
                           <ItemContainer

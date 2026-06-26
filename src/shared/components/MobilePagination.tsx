@@ -40,29 +40,43 @@ export default function MobilePagination(props: {
     return currentPage && currentPage > 2 && currentPage > totalPages - 2;
   };
 
+  const baseClass =
+    'relative inline-flex min-h-[40px] min-w-[40px] items-center justify-center px-3 py-2 text-sm font-semibold focus:z-20 focus:outline-offset-0';
+
   const getClass = (page: number) => {
     if (page === currentPage) {
-      return 'relative z-10 text-[8pt] inline-flex items-center bg-amber-600 px-3 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600';
+      return `${baseClass} z-10 bg-amber-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600`;
     } else {
-      return 'relative bg-white inline-flex text-[8pt] items-center px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0';
+      return `${baseClass} bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50`;
     }
   };
 
+  const PageButton = (props: { page: number }) => {
+    const { page } = props;
+    return (
+      <button
+        type="button"
+        aria-current={page === currentPage ? 'page' : undefined}
+        className={getClass(page)}
+        onClick={() => onChangePage(page)}
+      >
+        {page}
+      </button>
+    );
+  };
+
+  const Ellipsis = () => (
+    <span
+      className="pointer-events-none relative inline-flex min-h-[40px] items-center px-2 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300"
+    >
+      ...
+    </span>
+  );
+
   const Indexes = (limit: number = totalPages) => {
-    let element: any = [];
+    const element: any = [];
     for (let i = 1; i <= limit; i += 1) {
-      element = [
-        ...element,
-        <a
-          key={i}
-          href='#'
-          aria-current='page'
-          className={getClass(i)}
-          onClick={() => onChangePage(i)}
-        >
-          {i}
-        </a>,
-      ];
+      element.push(<PageButton key={i} page={i} />);
     }
     return element;
   };
@@ -74,22 +88,10 @@ export default function MobilePagination(props: {
   const LeftSide = () => {
     let element: any = [];
     if (isOnLeft()) {
-      const simplePaginate = Indexes(2 + 1);
-      element = [...element, simplePaginate];
+      element = [...element, ...Indexes(2 + 1)];
     }
     if (isOnMiddle() || isOnRight()) {
-      element = [
-        ...element,
-        <a
-          key={1}
-          href='#'
-          aria-current='page'
-          className={getClass(1)}
-          onClick={() => onChangePage(1)}
-        >
-          1
-        </a>,
-      ];
+      element = [...element, <PageButton key={1} page={1} />];
     }
     return element;
   };
@@ -97,64 +99,16 @@ export default function MobilePagination(props: {
   const MiddleSide = () => {
     let element: any = [];
     if (isOnLeft() || isOnRight()) {
-      element = [
-        ...element,
-        <a
-          key='middleSide'
-          href='#'
-          className='pointer-events-none relative inline-flex items-center px-2 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 focus:z-20 focus:outline-offset-0'
-          aria-current='page'
-        >
-          ...
-        </a>,
-      ];
+      element = [...element, <Ellipsis key="middleSide" />];
     }
     if (isOnMiddle()) {
       element = [
         ...element,
-        <a
-          key='leftCurrent'
-          href='#'
-          className='pointer-events-none relative inline-flex items-center px-2 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 focus:z-20 focus:outline-offset-0'
-          aria-current='page'
-        >
-          ...
-        </a>,
-        <a
-          key={`page-${currentPage - 1}`}
-          href='#'
-          aria-current='page'
-          className={getClass(currentPage - 1)}
-          onClick={() => onChangePage(currentPage - 1)}
-        >
-          {currentPage - 1}
-        </a>,
-        <a
-          key={`page-${currentPage}`}
-          href='#'
-          aria-current='page'
-          className={getClass(currentPage)}
-          onClick={() => onChangePage(currentPage)}
-        >
-          {currentPage}
-        </a>,
-        <a
-          key={`page-${currentPage + 1}`}
-          href='#'
-          aria-current='page'
-          className={getClass(currentPage + 1)}
-          onClick={() => onChangePage(currentPage + 1)}
-        >
-          {currentPage + 1}
-        </a>,
-        <a
-          key='rightCurrent'
-          href='#'
-          className='pointer-events-none relative inline-flex items-center px-2 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 focus:z-20 focus:outline-offset-0'
-          aria-current='page'
-        >
-          ...
-        </a>,
+        <Ellipsis key="leftCurrent" />,
+        <PageButton key={`page-${currentPage - 1}`} page={currentPage - 1} />,
+        <PageButton key={`page-${currentPage}`} page={currentPage} />,
+        <PageButton key={`page-${currentPage + 1}`} page={currentPage + 1} />,
+        <Ellipsis key="rightCurrent" />,
       ];
     }
     return element;
@@ -163,86 +117,58 @@ export default function MobilePagination(props: {
   const RightSide = () => {
     let element: any = [];
     if (isOnLeft() || isOnMiddle()) {
-      element = [
-        ...element,
-        <a
-          key={totalPages}
-          href='#'
-          aria-current='page'
-          className={getClass(totalPages)}
-          onClick={() => onChangePage(totalPages)}
-        >
-          {totalPages}
-        </a>,
-      ];
+      element = [...element, <PageButton key={totalPages} page={totalPages} />];
     }
     if (isOnRight()) {
       for (let i = totalPages - 2; i <= totalPages; i++) {
-        element = [
-          ...element,
-          <a
-            key={i}
-            href='#'
-            aria-current='page'
-            className={getClass(i)}
-            onClick={() => onChangePage(i)}
-          >
-            {i}
-          </a>,
-        ];
+        element = [...element, <PageButton key={i} page={i} />];
       }
     }
     return element;
   };
 
   return (
-    <div className='flex items-center border-t border-gray-200 px-2 py-3 sm:px-6'>
-      <div className='flex flex-1 items-center justify-between'>
-        <div>
-          <p className='text-[8pt] text-gray-700'>
-            Showing <span className='font-medium'>{offset + 1}</span> to{' '}
-            <span className='font-medium'>{+offset + +itemsPerPage}</span> of{' '}
-            <span className='font-medium'>{totalItems}</span> results
-          </p>
-        </div>
-        <div>
-          {isPaginated() && (
-            <nav
-              className='isolate inline-flex -space-x-px rounded-md shadow-sm'
-              aria-label='Pagination'
+    <div className='flex w-full items-center justify-between gap-2 border-t border-gray-200 px-2 py-3'>
+      <p className='shrink-0 text-xs text-gray-700'>
+        <span className='font-medium'>{offset + 1}</span>-
+        <span className='font-medium'>{+offset + +itemsPerPage}</span> / {' '}
+        <span className='font-medium'>{totalItems}</span>
+      </p>
+      {isPaginated() && (
+        <nav
+          className='isolate inline-flex max-w-full -space-x-px overflow-x-auto rounded-md shadow-sm'
+          aria-label='Pagination'
+        >
+          {!isOnFirstPage() && (
+            <button
+              type='button'
+              className='relative inline-flex min-h-[40px] items-center rounded-l-md bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'
+              onClick={() => onChangePage(+currentPage - 1)}
             >
-              {!isOnFirstPage() && (
-                <a
-                  href='#'
-                  className='relative bg-white inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'
-                  onClick={() => onChangePage(+currentPage - 1)}
-                >
-                  <span className='sr-only'>Previous</span>
-                  <ChevronLeftIcon className='h-5 w-4' aria-hidden='true' />
-                </a>
-              )}
-              {!isFullyPaginated() && <SimplePagination />}
-              {isFullyPaginated() && (
-                <>
-                  <LeftSide />
-                  <MiddleSide />
-                  <RightSide />
-                </>
-              )}
-              {!isOnLastPage() && (
-                <a
-                  href='#'
-                  className='relative bg-white inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'
-                  onClick={() => onChangePage(+currentPage + 1)}
-                >
-                  <span className='sr-only'>Next</span>
-                  <ChevronRightIcon className='h-5 w-4' aria-hidden='true' />
-                </a>
-              )}
-            </nav>
+              <span className='sr-only'>Previous</span>
+              <ChevronLeftIcon className='h-5 w-5' aria-hidden='true' />
+            </button>
           )}
-        </div>
-      </div>
+          {!isFullyPaginated() && <SimplePagination />}
+          {isFullyPaginated() && (
+            <>
+              <LeftSide />
+              <MiddleSide />
+              <RightSide />
+            </>
+          )}
+          {!isOnLastPage() && (
+            <button
+              type='button'
+              className='relative inline-flex min-h-[40px] items-center rounded-r-md bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'
+              onClick={() => onChangePage(+currentPage + 1)}
+            >
+              <span className='sr-only'>Next</span>
+              <ChevronRightIcon className='h-5 w-5' aria-hidden='true' />
+            </button>
+          )}
+        </nav>
+      )}
     </div>
   );
 }

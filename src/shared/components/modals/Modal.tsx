@@ -13,15 +13,15 @@ const Modal = (props: {
       open={open}
     >
       <DialogContent
-        className=''
         onClose={onClose}
       >
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
-          <DialogDescription className='text-left'>
-            {children}
-          </DialogDescription>
+          <DialogDescription className="sr-only">{title}</DialogDescription>
         </DialogHeader>
+        <div className="text-left text-foreground">
+          {children}
+        </div>
       </DialogContent>
     </Dialog>
   );

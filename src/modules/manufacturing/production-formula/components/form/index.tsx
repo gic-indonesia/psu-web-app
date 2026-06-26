@@ -25,7 +25,7 @@ import { ProductionFormulaService } from "../../services";
 import { IItemDetail } from "../../models/production-formula-detail.model";
 import { useRouter } from "next/navigation";
 import { IUpdateProductionFormulaRequest, UpdateProductionFormulaRequest } from "../../requests/update-production-formula.request";
-import { Bounce, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import branches from "../../consts/branches";
 
 const schema = CreateProductionFormulaRequest.schema();
@@ -103,34 +103,10 @@ const ProductionFormulaForm = (props: { item?: IItemDetail }) => {
 
   const showOnSuccessToast = (message: string, success: boolean) => {
     if (!success) {
-      toast.error(message, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-        className: 'rounded-md',
-        style: { width: '300px' }
-        });
+      toast.error(message);
       setProcessing(false);
     } else {
-      toast.success(message, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-        className: 'rounded-md',
-        style: { width: '300px' }
-        });
+      toast.success(message);
       dispatch(fetchList(filter));
       setProcessing(false);
       router.push('/manufacturing/production-formula');
@@ -139,7 +115,7 @@ const ProductionFormulaForm = (props: { item?: IItemDetail }) => {
 
   const onSubmit: SubmitHandler<ICreateProductionFormulaRequest | IUpdateProductionFormulaRequest> = (value) => {
     if (!value.branchName || (value.branchName && value.branchName === '')) {
-      alert('Cabang belum diisi');
+      toast.error('Cabang belum diisi');
       return;
     }
     setProcessing(true);
@@ -224,53 +200,59 @@ const ProductionFormulaForm = (props: { item?: IItemDetail }) => {
                   placeholder="Pilih Produk Utama"
                   ifEmptyLabel="Tidak ada produk yang ditemukan"
                   onChange={(value) => handleChangeProducedItem(value as any)}
-                  className="w-[350px] truncate overflow-hidden text-ellipsis whitespace-nowrap"
+                  className="w-full"
                 />
               )
             }
-            <div className="flex items-center space-x-2">
-              <Input
-                id="quantity"
-                label="Kuantitas"
-                type="number"
-                className="text-base"
-                labelClassName="font-medium"
-              />
+            <div className="flex items-end gap-2">
+              <div className="min-w-0 flex-1">
+                <Input
+                  id="quantity"
+                  label="Kuantitas"
+                  type="number"
+                  className="text-base w-full"
+                  labelClassName="font-medium"
+                />
+              </div>
               {
                 denomOptions ? (
-                  <SelectInput
-                    id="itemUnitName"
-                    options={Object.keys(denomOptions).map((c) => ({ label: c, value: c }))}
-                    placeholder="Pilih Satuan"
-                    className={`mt-3 ${errors.itemUnitName ? 'mt-4' : ''}`}
-                  />
+                  <div className="min-w-0 flex-1">
+                    <SelectInput
+                      id="itemUnitName"
+                      options={Object.keys(denomOptions).map((c) => ({ label: c, value: c }))}
+                      placeholder="Pilih Satuan"
+                      className={errors.itemUnitName ? 'mt-4' : ''}
+                    />
+                  </div>
                 ) : (
                   null
                 )
               }
             </div>
-            <div className="flex space-x-8 items-center">
-              {
-                !isAutoNumbering ? (
-                  <Input
-                    id="number"
-                    label="No Formula #"
-                    labelClassName="font-medium"
-                    className="text-base"
-                  />
-                ) : (
-                  <SelectInput
-                    defaultValue={'301'}
-                    label={"No Formula #"}
-                    id="formulaProduction"
-                    options={[{ value: '301', label: 'Formula Produksi' }]}
-                    placeholder="Pilih Formula Produksi"
-                  />
-                )
-              }
+            <div className="flex items-end gap-3">
+              <div className="min-w-0 flex-1">
+                {
+                  !isAutoNumbering ? (
+                    <Input
+                      id="number"
+                      label="No Formula #"
+                      labelClassName="font-medium"
+                      className="text-base w-full"
+                    />
+                  ) : (
+                    <SelectInput
+                      defaultValue={'301'}
+                      label={"No Formula #"}
+                      id="formulaProduction"
+                      options={[{ value: '301', label: 'Formula Produksi' }]}
+                      placeholder="Pilih Formula Produksi"
+                    />
+                  )
+                }
+              </div>
               <Switch
                 defaultChecked={isAutoNumbering}
-                className="mt-4"
+                className="mb-2 shrink-0"
                 onCheckedChange={(checked) => {
                   setIsAutoNumbering(checked)
                 }}

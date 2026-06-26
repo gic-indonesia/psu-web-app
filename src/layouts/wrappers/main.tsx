@@ -1,13 +1,9 @@
 'use client'
 
-import dynamic from "next/dynamic";
 import { Fragment, ReactNode, useEffect } from "react";
 import { Header, HeaderMobile } from "@layouts/headers";
 import { MarginWidthWrapper, PageWrapper } from "@layouts/wrappers";
 import { isUserLoggedIn, isTokenExpired } from "@lib/utils";
-const SideNav = dynamic(() => import('@layouts/navs/side-nav'), {
-  ssr: false,
-})
 
 import { handleLogout } from "@modules/auth/stores/auth.store";
 import { useAppDispatch } from "@hooks/redux";
@@ -39,24 +35,21 @@ export default function Main(props: { children: ReactNode }) {
     <Fragment>
       {
         !isTokenExpired() && !(pathname === '/auth') ? (
-          <Fragment>
-            <main className="flex amber bg-white">
-              <SideNav/>
-              <div className="flex-1 bg-white">
-                <MarginWidthWrapper>
-                  <Header/>
-                  <HeaderMobile/>
-                  <PageWrapper>
-                    {children}
-                  </PageWrapper>
-                </MarginWidthWrapper>
-              </div>
-            </main>
-          </Fragment>
+          <main className="flex min-h-screen justify-center bg-zinc-100">
+            <div className="relative w-full max-w-[480px] bg-white shadow-sm">
+              <MarginWidthWrapper>
+                <Header/>
+                <HeaderMobile/>
+                <PageWrapper>
+                  {children}
+                </PageWrapper>
+              </MarginWidthWrapper>
+            </div>
+          </main>
         ) : (
-          <main>
-            <section className="bg-white">
-              <div className="layout relative flex min-h-screen flex-col items-center justify-center bg-gray-400 py-12 align-middle">
+          <main className="bg-zinc-100">
+            <section className="flex min-h-screen justify-center">
+              <div className="relative flex w-full max-w-[480px] flex-col items-center justify-center bg-white px-4 py-12 shadow-sm">
                 {children}
               </div>
             </section>

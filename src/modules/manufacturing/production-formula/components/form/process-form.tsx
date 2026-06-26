@@ -70,17 +70,17 @@ const ProductAndStagesForm = () => {
               placeholder="Pilih Tahapan Produksi"
               ifEmptyLabel="Tidak ada tahapan yang ditemukan"
               onChange={(option) => handleChangeStage(option)}
-              className="w-[340px] truncate overflow-hidden text-ellipsis whitespace-nowrap"
+              className="w-full"
             />
           )
         }
-        <ScrollArea className="px-2 h-[350px] w-[340px] mt-3">
-          <div className="mt-2 text-[9pt] space-y-1">
+        <ScrollArea className="mt-3 w-full max-h-[45vh] px-1">
+          <div className="mt-2 text-sm space-y-1">
             {
               processSortList && Object.keys(processSortList).map((key, i) => (
                 <div key={i} className="flex space-x-2 items-center">
                   <p className="text-sm font-semibold text-amber-600 bg-white p-1 rounded-md">{key}</p>
-                  <ScrollArea className="max-w-[305px] whitespace-nowrap rounded-md border p-1">
+                  <ScrollArea className="max-w-full whitespace-nowrap rounded-md border p-1">
                     <div className="flex space-x-1 p-1">
                       {
                         processSortList[Number(key)].map((item, index) => (

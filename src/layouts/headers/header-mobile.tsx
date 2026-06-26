@@ -96,7 +96,7 @@ const HeaderMobile = () => {
                   <Link
                     href={item.path}
                     onClick={() => toggleOpen()}
-                    className={`p-2 rounded-lg flex w-full text-lg font-medium transition`}
+                    className={`px-2 py-3 rounded-lg flex w-full text-lg font-medium transition`}
                   >
                     {item.title}
                   </Link>
