@@ -2,7 +2,7 @@ export default function RawMaterialPage() {
   return (
     <iframe
       className="w-full min-h-screen"
-      src="https://datastudio.google.com/embed/reporting/4098f2fa-330e-44a1-a01f-31566fa62fc6/page/p_tm90y2jqtd"
+      src="https://datastudio.google.com/embed/reporting/4098f2fa-330e-44a1-a01f-31566fa62fc6/page/p_ai7q4j8hvd"
       frameBorder="0"
       style={{ border: 0 }}
       allowFullScreen
