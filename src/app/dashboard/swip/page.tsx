@@ -1,8 +1,8 @@
-export default function ProductPage() {
+export default function SWIPPage() {
   return (
     <iframe
       className="w-full min-h-screen"
-      src="https://lookerstudio.google.com/embed/reporting/4098f2fa-330e-44a1-a01f-31566fa62fc6/page/p_pcsfxvdjsd"
+      src="https://datastudio.google.com/embed/reporting/4098f2fa-330e-44a1-a01f-31566fa62fc6/page/p_7pvydk36xd"
       frameBorder="0"
       style={{ border: 0 }}
       allowFullScreen
